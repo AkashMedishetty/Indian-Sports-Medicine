@@ -2,10 +2,6 @@ import mongoose, { Connection } from 'mongoose'
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
-}
-
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
@@ -26,6 +22,12 @@ if (!cached) {
 }
 
 async function connectDB() {
+  // Deferred to runtime so the landing pages can build/deploy before the
+  // backend is configured. Only throws when a route actually connects.
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local')
+  }
+
   if (cached.conn) {
     return cached.conn
   }
