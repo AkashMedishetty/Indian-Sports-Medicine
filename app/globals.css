@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light mode - ISMC 2026 Theme (from conference poster) */
+  --background: #ffffff;
+  --foreground: #0E2A57;
+  --primary: #0E2A57;
+  --primary-foreground: #ffffff;
+  --secondary: #F5A524;
+  --secondary-foreground: #0E2A57;
+  --accent: #1E5BB0;
+  --accent-foreground: #ffffff;
+  --muted: #F3F6FB;
+  --muted-foreground: #5B6B85;
+  --card: #ffffff;
+  --card-foreground: #0E2A57;
+  --popover: #ffffff;
+  --popover-foreground: #0E2A57;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0E2A57;
+  --radius: 0.5rem;
+
+  /* ISMC brand tokens */
+  --ismc-navy: #0E2A57;
+  --ismc-navy-deep: #0A1E40;
+  --ismc-orange: #F5A524;
+  --ismc-orange-deep: #E07B0A;
+  --ismc-blue: #1E5BB0;
+  --ismc-sky: #4F8FE0;
+  --ismc-light: #F3F6FB;
+
+  /* RGB values for color interpolation */
+  --ismc-navy-rgb: 14, 42, 87;
+  --ismc-orange-rgb: 245, 165, 36;
+  --ismc-blue-rgb: 30, 91, 176;
+  --ismc-sky-rgb: 79, 143, 224;
+}
+
+.dark {
+  /* Dark mode - ISMC 2026 Theme */
+  --background: #0A1E40;
+  --foreground: #ffffff;
+  --primary: #1E5BB0;
+  --primary-foreground: #ffffff;
+  --secondary: #F5A524;
+  --secondary-foreground: #0A1E40;
+  --accent: #F5A524;
+  --accent-foreground: #0A1E40;
+  --muted: #11264a;
+  --muted-foreground: #9db0cc;
+  --card: #102a52;
+  --card-foreground: #ffffff;
+  --popover: #102a52;
+  --popover-foreground: #ffffff;
+  --border: #1e3a63;
+  --input: #1e3a63;
+  --ring: #1E5BB0;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)];
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* Smooth scrolling for GSAP */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* ---- ISMC concept type system (per-concept fonts map onto these vars) ---- */
+.ismc-display {
+  font-family: var(--font-display), 'Space Grotesk', system-ui, sans-serif;
+}
+.ismc-mono {
+  font-family: var(--font-mono-ismc), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+.ismc-serif {
+  font-family: var(--font-serif-ismc), Georgia, 'Times New Roman', serif;
+}
+.ismc-body {
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+}
+
+/* =================================================================
+   Premium (MYDNA-style) section tokens — light default + dark
+   ================================================================= */
+:root {
+  --p-bg: #ffffff;
+  --p-bg-soft: #f5f7fb;
+  --p-surface: #ffffff;
+  --p-text: #0b1b33;
+  --p-text-muted: #5b6b85;
+  --p-text-faint: #9aa6ba;
+  --p-border: #e7ebf1;
+  --p-hairline: rgba(11, 27, 51, 0.1);
+  --p-glass: rgba(255, 255, 255, 0.55);
+  --p-glass-border: rgba(11, 27, 51, 0.08);
+  --p-shadow: 0 30px 80px -40px rgba(11, 27, 51, 0.35);
+  --p-subject: #0e2a57;
+  --p-subject-soft: #1e5bb0;
+  --p-accent: #f5a524;
+  --p-accent-deep: #e07b0a;
+}
+.dark {
+  --p-bg: #000000;
+  --p-bg-soft: #070707;
+  --p-surface: #0c0c0c;
+  --p-text: #f3f6fb;
+  --p-text-muted: #9db0cc;
+  --p-text-faint: #5e7396;
+  --p-border: rgba(255, 255, 255, 0.1);
+  --p-hairline: rgba(255, 255, 255, 0.08);
+  --p-glass: rgba(255, 255, 255, 0.04);
+  --p-glass-border: rgba(255, 255, 255, 0.12);
+  --p-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9);
+  --p-subject: #ffffff;
+  --p-subject-soft: #8fb4ec;
+  --p-accent: #f5a524;
+  --p-accent-deep: #f5a524;
+}
+
+/* Dark-mode neon emission — slight glow on display text, accent buttons, marquee */
+.dark .ismc-display {
+  text-shadow: 0 0 22px rgba(243, 246, 251, 0.16);
+}
+.dark .p-neon {
+  box-shadow: 0 0 22px -2px rgba(245, 165, 36, 0.6), 0 0 6px rgba(245, 165, 36, 0.35);
+}
+.dark .p-neon-soft {
+  box-shadow: 0 0 26px -6px rgba(143, 180, 236, 0.5);
+}
+.dark .p-marquee {
+  text-shadow: 0 0 20px rgba(245, 165, 36, 0.4), 0 0 30px rgba(243, 246, 251, 0.15);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dark .ismc-display, .dark .p-marquee { text-shadow: none; }
+}
+
+/* ---- V4 gradient-mesh hero ---- */
+.v4-mesh {
+  background:
+    radial-gradient(48% 75% at 6% 52%, rgba(236, 224, 138, 0.55), transparent 55%),
+    radial-gradient(30% 42% at 28% 18%, rgba(245, 208, 165, 0.45), transparent 55%),
+    radial-gradient(46% 72% at 94% 28%, rgba(196, 158, 232, 0.62), transparent 55%),
+    radial-gradient(40% 46% at 56% 96%, rgba(168, 222, 184, 0.45), transparent 55%),
+    linear-gradient(104deg, #f4eccf 0%, #fcf9f4 46%, #efe3f5 100%);
+}
+.dark .v4-mesh {
+  background:
+    radial-gradient(50% 60% at 18% 26%, rgba(245, 165, 36, 0.18), transparent 60%),
+    radial-gradient(55% 60% at 82% 18%, rgba(30, 91, 176, 0.28), transparent 60%),
+    radial-gradient(85% 70% at 60% 105%, rgba(143, 180, 236, 0.14), transparent 60%),
+    #000000;
+}
+.v4-streaks {
+  background-image: repeating-linear-gradient(90deg, transparent 0 24px, rgba(255, 255, 255, 0.22) 24px 25px);
+}
+.dark .v4-streaks {
+  background-image: repeating-linear-gradient(90deg, transparent 0 24px, rgba(255, 255, 255, 0.045) 24px 25px);
+}
+/* soft spotlight so the white-bg athlete keys cleanly via multiply in both themes */
+.v4-spot {
+  background: radial-gradient(60% 70% at 60% 55%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%);
+}
+.dark .v4-spot {
+  background: radial-gradient(58% 66% at 60% 52%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 68%);
+}
+
+.p-page {
+  background: var(--p-bg);
+  color: var(--p-text);
+}
+.p-glass {
+  background: var(--p-glass);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--p-glass-border);
+}
+/* outline (stroked) display type for the big CTA */
+.p-outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--p-text);
+}
+.dark .p-outline-text {
+  -webkit-text-stroke: 1.5px var(--p-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ---- colour + motion accents ---- */
+/* animated gradient-sweep text (big CTA) */
+@keyframes p-grad-sweep { to { background-position: -220% 0; } }
+.p-grad-text {
+  background: linear-gradient(100deg, var(--p-text) 0%, var(--p-text) 32%, var(--p-accent) 50%, var(--p-text) 68%, var(--p-text) 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: p-grad-sweep 5s linear infinite;
+}
+/* glow pulse for accent buttons */
+@keyframes p-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 165, 36, 0); }
+  50% { box-shadow: 0 0 30px 2px rgba(245, 165, 36, 0.45); }
+}
+.p-pulse { animation: p-pulse-glow 2.6s ease-in-out infinite; }
+/* soft floating drift for accent dots */
+@keyframes p-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.p-float { animation: p-float 6s ease-in-out infinite; }
+
+/* colour-washed hero / cta backdrop */
+.p-hero-mesh {
+  background:
+    radial-gradient(38% 48% at 10% 16%, rgba(245, 165, 36, 0.1), transparent 60%),
+    radial-gradient(44% 54% at 88% 22%, rgba(30, 91, 176, 0.12), transparent 60%),
+    radial-gradient(52% 50% at 72% 94%, rgba(143, 180, 236, 0.12), transparent 60%);
+}
+.dark .p-hero-mesh {
+  background:
+    radial-gradient(40% 50% at 10% 16%, rgba(245, 165, 36, 0.16), transparent 60%),
+    radial-gradient(46% 56% at 88% 22%, rgba(30, 91, 176, 0.26), transparent 60%),
+    radial-gradient(52% 52% at 72% 102%, rgba(143, 180, 236, 0.1), transparent 60%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .p-grad-text, .p-pulse, .p-float { animation: none; }
+}
+
+/* Robust CSS entrance animations for hero copy (no JS/rAF dependency — always
+   end visible). Used instead of framer for above-the-fold critical content. */
+@keyframes p-rise {
+  from { transform: translateY(112%); }
+  to { transform: translateY(0); }
+}
+@keyframes p-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.p-rise {
+  display: block;
+  animation: p-rise 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.p-fade-up {
+  animation: p-fade-up 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .p-rise, .p-fade-up { animation: none; }
+}

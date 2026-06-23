@@ -1,0 +1,2 @@
+# This folder contains pre-computed point cloud data
+# Run /generate-points to create hand-points.json
