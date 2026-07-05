@@ -1413,7 +1413,7 @@ export default function RegisterPage() {
                 </div>
 
                 {/* HOD Recommendation Form — removed for TASMC (was PG/Student only) */}
-                {false && (
+                {(false as boolean) && (
                   <div className="col-span-full" data-hod-upload>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       HOD Recommendation Form <span className="text-red-500">*</span>
@@ -2841,7 +2841,7 @@ export default function RegisterPage() {
   // Registration OPEN for TASMC 2026. (Was `if (!isAdmin)` — the ISSH
   // end-of-registration gate that showed every non-admin a "closed" page.
   // Set back to `if (!isAdmin)` to close online registration again.)
-  if (false) {
+  if (false as boolean) {
     return (
       <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f0f4f8 0%, #e8f0f8 30%, #f5f0f8 60%, #f0f4f8 100%)' }}>
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
