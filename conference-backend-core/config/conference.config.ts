@@ -267,11 +267,11 @@ export const conferenceConfig: ConferenceConfig = {
 
   // Contact
   contact: {
-    email: "contact@indiansportsmedicine.com",       // TODO: confirm official email
+    email: "contact@tasm2026.com",       // TODO: confirm official email
     phone: "+91 00000 00000",                         // TODO: confirm phone (Conference Secretary: Dr. Nithin)
-    website: "https://indiansportsmedicine.com",      // TODO: confirm domain
-    supportEmail: "support@indiansportsmedicine.com",
-    abstractsEmail: "abstracts@indiansportsmedicine.com"
+    website: "https://tasm2026.com",      // TODO: confirm domain
+    supportEmail: "support@tasm2026.com",
+    abstractsEmail: "abstracts@tasm2026.com"
   },
 
   // Theme Colors - ISMC 2026 palette (derived from conference poster)
@@ -398,7 +398,7 @@ export const conferenceConfig: ConferenceConfig = {
   // Email
   email: {
     fromName: "Telangana Association of Sports Medicine Conference 2026",
-    replyTo: "noreply@indiansportsmedicine.com",
+    replyTo: "noreply@tasm2026.com",
     footerText: "© 2026 Telangana Association of Sports Medicine Conference — TASM. All rights reserved.",
     logoUrl: "/logos/ismc-logo.png"
   },

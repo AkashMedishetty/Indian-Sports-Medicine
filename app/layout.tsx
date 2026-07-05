@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://indiansportsmedicine.com"; // TODO: confirm actual domain
+const siteUrl = "https://tasm2026.com";
 
 export const metadata: Metadata = {
   title: {
