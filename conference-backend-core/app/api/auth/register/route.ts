@@ -523,7 +523,9 @@ export async function POST(request: NextRequest) {
           registrationTypeLabel: registrationTypeLabel,
           workshopSelections: workshopDetails,
           accompanyingPersons: registration?.accompanyingPersons || [],
-          accommodation: newUser.registration.accommodation?.required ? newUser.registration.accommodation : undefined
+          accommodation: newUser.registration.accommodation?.required ? newUser.registration.accommodation : undefined,
+          amount: newUser.payment?.amount || payment?.amount || 0,
+          currency: 'INR'
         })
         console.log('✅ Registration confirmation email sent')
       } catch (emailError) {

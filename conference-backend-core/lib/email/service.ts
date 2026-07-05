@@ -81,6 +81,8 @@ export class EmailService {
     accompanyingPersons?: Array<{name: string, age: number, relationship: string}>
     accommodation?: { required: boolean, roomType: string, checkIn: string, checkOut: string, nights: number, totalAmount: number }
     paymentMethod?: 'bank_transfer' | 'payment_gateway'
+    amount?: number
+    currency?: string
   }) {
     try {
       // Use static config by default, but allow database override for template content
@@ -100,6 +102,23 @@ export class EmailService {
         return { success: false, message: 'Email template disabled' }
       }
 
+      // Generate the registration QR code (embedded in the confirmation email)
+      let qrCodeDataURL: string | undefined
+      let qrCodeBuffer: Buffer | undefined
+      try {
+        const { QRCodeGenerator } = await import('@/lib/utils/qrcode-generator')
+        const qrPayload = {
+          registrationId: userData.registrationId,
+          name: userData.name,
+          email: userData.email,
+          type: userData.registrationType
+        }
+        qrCodeDataURL = await QRCodeGenerator.generateRegistrationQR(qrPayload)
+        qrCodeBuffer = await QRCodeGenerator.generateRegistrationQRBuffer(qrPayload)
+      } catch (qrError) {
+        console.error('Failed to generate registration QR for confirmation email:', qrError)
+      }
+
       const html = getRegistrationConfirmationTemplate({
         name: userData.name,
         registrationId: userData.registrationId,
@@ -109,7 +128,10 @@ export class EmailService {
         workshopSelections: userData.workshopSelections,
         accompanyingPersons: userData.accompanyingPersons,
         accommodation: userData.accommodation,
-        paymentMethod: userData.paymentMethod || 'bank_transfer'
+        paymentMethod: userData.paymentMethod || 'bank_transfer',
+        amount: (userData as any).amount,
+        currency: (userData as any).currency,
+        qrCodeDataURL
       })
       
       // Generate ICS calendar file
@@ -129,7 +151,13 @@ export class EmailService {
             filename: `${conferenceConfig.shortName.replace(/\s+/g, '-')}-${userData.registrationId}.ics`,
             content: Buffer.from(icsContent, 'utf-8'),
             contentType: 'text/calendar; charset=utf-8; method=REQUEST'
-          }
+          },
+          ...(qrCodeBuffer ? [{
+            filename: 'qr-code-embedded.png',
+            content: qrCodeBuffer,
+            contentType: 'image/png',
+            cid: 'qr-code-embedded'
+          }] : [])
         ],
         userId: userData.userId,
         userName: userData.name,

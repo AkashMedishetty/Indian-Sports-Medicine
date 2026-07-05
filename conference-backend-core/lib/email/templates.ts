@@ -128,6 +128,9 @@ export function getRegistrationConfirmationTemplate(userData: {
   accompanyingPersons?: Array<{name: string, age: number, relationship: string}>
   accommodation?: { required: boolean, roomType: string, checkIn: string, checkOut: string, nights: number, totalAmount: number }
   paymentMethod?: string
+  amount?: number
+  currency?: string
+  qrCodeDataURL?: string
 }) {
   const isPaymentGateway = userData.paymentMethod === 'payment_gateway'
   
@@ -142,6 +145,7 @@ export function getRegistrationConfirmationTemplate(userData: {
       <table>
         <tr><th>Registration ID</th><td><strong>${userData.registrationId}</strong></td></tr>
         <tr><th>Registration Type</th><td>${userData.registrationTypeLabel}</td></tr>
+        ${userData.amount ? `<tr><th>Amount</th><td><strong>${userData.currency || 'INR'} ${userData.amount.toLocaleString('en-IN')}</strong></td></tr>` : ''}
         <tr><th>Email</th><td>${userData.email}</td></tr>
         <tr><th>Status</th><td><span style="color: ${isPaymentGateway ? '#16a34a' : '#ffa500'};">${isPaymentGateway ? '✓ Confirmed' : 'Pending Verification'}</span></td></tr>
         ${userData.workshopSelections && userData.workshopSelections.length > 0 ? 
@@ -152,7 +156,18 @@ export function getRegistrationConfirmationTemplate(userData: {
           `<tr><th>Hotel Accommodation</th><td>${userData.accommodation.roomType === 'single' ? 'Single Room' : 'Sharing Room'} — ${userData.accommodation.nights} night(s)<br/>Check-in: ${userData.accommodation.checkIn} | Check-out: ${userData.accommodation.checkOut}<br/>Amount: ₹${userData.accommodation.totalAmount?.toLocaleString('en-IN')} (+ 18% GST)</td></tr>` : ''}
       </table>
     </div>
-    
+
+    ${userData.qrCodeDataURL ? `
+    <div style="text-align: center; background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <h3 style="margin-top: 0; color: #0E2A57;">Your Registration QR Code</h3>
+      <img src="cid:qr-code-embedded" alt="Registration QR Code" style="max-width: 240px; border: 4px solid #0E2A57; border-radius: 8px; padding: 10px; background: white;" onerror="this.src='${userData.qrCodeDataURL}'" />
+      <p style="color: #555; font-size: 14px; margin-bottom: 0;">
+        <strong>Please present this QR code at the registration desk.</strong><br>
+        Registration ID: <strong>${userData.registrationId}</strong>
+      </p>
+    </div>
+    ` : ''}
+
     ${isPaymentGateway ? `
     <div style="background-color: #e8f5e9; padding: 15px; border-left: 4px solid #16a34a; margin: 20px 0;">
       <h4 style="margin-top: 0; color: #2e7d32;">✓ Registration Confirmed!</h4>
