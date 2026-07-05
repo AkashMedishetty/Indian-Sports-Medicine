@@ -85,21 +85,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: [
-      { url: "/Favicons/favicon.ico" },
-      { url: "/Favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/Favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/Favicons/apple-touch-icon.png" },
-    ],
-    other: [
-      { rel: "android-chrome-192x192", url: "/Favicons/android-chrome-192x192.png" },
-      { rel: "android-chrome-512x512", url: "/Favicons/android-chrome-512x512.png" },
-    ],
-  },
-  manifest: "/Favicons/site.webmanifest",
+  // Favicon is provided by app/icon.svg (TASMC monogram). ISSH favicons removed.
   verification: {
     // Add Google Search Console verification if available
     // google: "your-google-verification-code",

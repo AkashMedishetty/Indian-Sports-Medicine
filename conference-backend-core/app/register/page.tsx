@@ -640,22 +640,7 @@ export default function RegisterPage() {
           return false
         }
 
-        // HOD form no longer required for TASMC (was mandatory for PG/Student)
-        if (false) {
-          console.log('HOD form missing for PG/Student')
-          setTouchedFields(prev => ({ ...prev, hodForm: true }))
-          toast({
-            title: "❌ HOD Recommendation Form Required",
-            description: "PG/Student registrations must upload an HOD Recommendation Form.",
-            variant: "destructive",
-            duration: 8000
-          })
-          const hodSection = document.querySelector('[data-hod-upload]')
-          if (hodSection) {
-            hodSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
-          return false
-        }
+        // HOD Recommendation Form is no longer required for TASMC.
 
         console.log('✅ Step 1 validation passed successfully!')
         return true
