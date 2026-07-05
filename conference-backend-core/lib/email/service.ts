@@ -203,12 +203,30 @@ export class EmailService {
         return { success: false, message: 'Email template disabled' }
       }
 
+      // Generate the registration QR code (embedded in the payment confirmation)
+      let qrCodeDataURL: string | undefined
+      let qrCodeBuffer: Buffer | undefined
+      try {
+        const { QRCodeGenerator } = await import('@/lib/utils/qrcode-generator')
+        const qrPayload = {
+          registrationId: paymentData.registrationId,
+          name: paymentData.name,
+          email: paymentData.email,
+          type: (paymentData as any).registrationType || paymentData.breakdown?.registrationType || 'Delegate'
+        }
+        qrCodeDataURL = await QRCodeGenerator.generateRegistrationQR(qrPayload)
+        qrCodeBuffer = await QRCodeGenerator.generateRegistrationQRBuffer(qrPayload)
+      } catch (qrError) {
+        console.error('Failed to generate registration QR for payment confirmation:', qrError)
+      }
+
       const html = getPaymentConfirmationTemplate({
         ...paymentData,
         currency: paymentData.currency || 'INR',
         transactionId: paymentData.transactionId || 'N/A',
         paymentDate: paymentData.paymentDate || new Date().toLocaleDateString(),
-        breakdown: paymentData.breakdown || {}
+        breakdown: paymentData.breakdown || {},
+        qrCodeDataURL
       })
 
       // Generate PDF invoice for email attachment
@@ -306,13 +324,19 @@ export class EmailService {
         subject: template.subject || `Payment Confirmation & Invoice - ${conferenceConfig.shortName}`,
         html,
         text: `Payment confirmation for ${paymentData.name}. Amount: ${paymentData.currency} ${paymentData.amount}`,
-        attachments: pdfBuffer ? [
-          {
+        attachments: [
+          ...(pdfBuffer ? [{
             filename: fileName,
             content: pdfBuffer,
             contentType: 'application/pdf'
-          }
-        ] : [],
+          }] : []),
+          ...(qrCodeBuffer ? [{
+            filename: 'qr-code-embedded.png',
+            content: qrCodeBuffer,
+            contentType: 'image/png',
+            cid: 'qr-code-embedded'
+          }] : [])
+        ],
         userId: paymentData.userId,
         userName: paymentData.name,
         templateName: 'payment-confirmation',

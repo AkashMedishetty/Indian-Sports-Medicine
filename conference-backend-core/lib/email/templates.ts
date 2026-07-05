@@ -212,6 +212,7 @@ export function getPaymentConfirmationTemplate(paymentData: {
   transactionId: string
   paymentDate: string
   breakdown: any
+  qrCodeDataURL?: string
 }) {
   const content = `
     <h2>Payment Confirmation & Invoice</h2>
@@ -269,7 +270,18 @@ export function getPaymentConfirmationTemplate(paymentData: {
         </tr>
       </table>
     </div>
-    
+
+    ${paymentData.qrCodeDataURL ? `
+    <div style="text-align: center; background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <h3 style="margin-top: 0; color: #0E2A57;">Your Registration QR Code</h3>
+      <img src="cid:qr-code-embedded" alt="Registration QR Code" style="max-width: 240px; border: 4px solid #0E2A57; border-radius: 8px; padding: 10px; background: white;" onerror="this.src='${paymentData.qrCodeDataURL}'" />
+      <p style="color: #555; font-size: 14px; margin-bottom: 0;">
+        <strong>Please present this QR code at the registration desk.</strong><br>
+        Registration ID: <strong>${paymentData.registrationId}</strong>
+      </p>
+    </div>
+    ` : ''}
+
     <p><strong>What's Next:</strong></p>
     <ul>
       <li>Save this email as your payment receipt</li>
