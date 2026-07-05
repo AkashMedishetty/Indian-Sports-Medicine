@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { ismc } from '@/lib/ismc/content';
 
-const HEAD_LINES = ['Indian Sports', 'Medicine', 'Conference 2026'];
+const HEAD_LINES = ['Telangana', 'Association', 'of Sports', 'Medicine', 'Conference'];
 const STAT_COLORS = ['var(--p-accent)', 'var(--p-subject-soft)', '#16a34a', 'var(--p-accent-deep)'];
 
 export function Hero({ subject }: { subject: React.ReactNode }) {

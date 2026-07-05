@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import { motion } from "framer-motion"
 import { Button } from "@/conference-backend-core/components/ui/button"
 import { Input } from "@/conference-backend-core/components/ui/input"
 import { Textarea } from "@/conference-backend-core/components/ui/textarea"
@@ -10,16 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react"
 import { Navigation } from "@/conference-backend-core/components/Navigation"
 import { conferenceConfig } from "@/conference-backend-core/config/conference.config"
+import { SmoothScroll } from "@/components/concepts/premium/SmoothScroll"
+import { Footer } from "@/components/concepts/premium/Sections"
+import { ismc } from "@/lib/ismc/content"
+
+const fieldClass =
+  "border-[var(--p-border)] bg-[var(--p-surface)] text-[var(--p-text)] placeholder:text-[var(--p-text-faint)] focus-visible:ring-[var(--p-accent)]"
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  })
-
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
@@ -27,7 +25,6 @@ export default function ContactPage() {
 
   const validateForm = () => {
     const errors: Record<string, string> = {}
-    
     if (!formData.name.trim()) {
       errors.name = 'Name is required'
     } else if (formData.name.length > 100) {
@@ -35,7 +32,6 @@ export default function ContactPage() {
     } else if (!/^[a-zA-Z\s'-]+$/.test(formData.name)) {
       errors.name = 'Name can only contain letters, spaces, hyphens, and apostrophes'
     }
-    
     if (!formData.email.trim()) {
       errors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -43,17 +39,14 @@ export default function ContactPage() {
     } else if (formData.email.length > 100) {
       errors.email = 'Email must be less than 100 characters'
     }
-    
     if (formData.phone.trim() && !/^\+?[\d\s-()]+$/.test(formData.phone)) {
       errors.phone = 'Please enter a valid phone number'
     } else if (formData.phone.trim() && formData.phone.length < 10) {
       errors.phone = 'Phone number must be at least 10 digits'
     }
-    
     if (!formData.subject) {
       errors.subject = 'Please select a subject'
     }
-    
     if (!formData.message.trim()) {
       errors.message = 'Message is required'
     } else if (formData.message.length < 10) {
@@ -61,7 +54,6 @@ export default function ContactPage() {
     } else if (formData.message.length > 1000) {
       errors.message = 'Message must be less than 1000 characters'
     }
-    
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
   }
@@ -71,23 +63,17 @@ export default function ContactPage() {
     setIsSubmitting(true)
     setSubmitError('')
     setFieldErrors({})
-
     if (!validateForm()) {
       setIsSubmitting(false)
       return
     }
-
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-
       const result = await response.json()
-
       if (result.success) {
         setIsSubmitted(true)
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
@@ -115,7 +101,6 @@ export default function ContactPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    
     if (fieldErrors[field]) {
       setFieldErrors((prev) => {
         const newErrors = { ...prev }
@@ -125,244 +110,132 @@ export default function ContactPage() {
     }
   }
 
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <Navigation />
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center p-8 lg:p-12 bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md mx-4"
-        >
-          <CheckCircle className="w-12 h-12 lg:w-16 lg:h-16 text-green-500 mx-auto mb-4 lg:mb-6" />
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3 lg:mb-4">Message Sent Successfully!</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4 lg:mb-6 text-sm lg:text-base">Thank you for contacting us. We will get back to you shortly.</p>
-          <Button onClick={() => setIsSubmitted(false)} className="bg-conference-primary hover:bg-conference-primary dark:bg-yellow-500 dark:hover:bg-conference-primary">
-            Send Another Message
-          </Button>
-        </motion.div>
-      </div>
-    )
-  }
+  const infoItems = [
+    {
+      icon: MapPin,
+      title: 'Venue',
+      lines: [conferenceConfig.venue.name, `${conferenceConfig.venue.city}, ${conferenceConfig.venue.state}`, conferenceConfig.venue.country],
+    },
+    { icon: Phone, title: 'Phone', lines: [conferenceConfig.contact.phone] },
+    {
+      icon: Mail,
+      title: 'Email',
+      lines: [conferenceConfig.contact.email, conferenceConfig.contact.supportEmail ? `Support: ${conferenceConfig.contact.supportEmail}` : ''].filter(Boolean),
+    },
+    { icon: Clock, title: 'Working hours', lines: ['Monday – Friday: 9:00 AM – 6:00 PM', 'Available for conference inquiries'] },
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <main className="ismc-body p-page relative min-h-screen overflow-x-hidden">
+      <SmoothScroll />
       <Navigation />
 
-      <div className="pt-20 lg:pt-24 pb-12">
-        {/* Header */}
-        <section className="py-12 lg:py-16 bg-gradient-to-r from-conference-primary to-blue-700 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 lg:mb-6">Contact Us</h1>
-              <p className="text-lg lg:text-xl max-w-3xl mx-auto">
-                Have questions about the conference? Get in touch with our team and we'll be happy to assist you.
-              </p>
-            </motion.div>
-          </div>
-        </section>
+      {/* Page header */}
+      <header className="p-page relative overflow-hidden">
+        <div className="p-hero-mesh pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="relative mx-auto max-w-7xl px-5 pb-6 pt-20 sm:pt-28 lg:px-10">
+          <p className="p-fade-up ismc-mono mb-6 text-[11px] uppercase tracking-[0.3em] text-[var(--p-accent-deep)]">TASMC 2026 · {ismc.venue.label}</p>
+          <h1 className="p-fade-up ismc-display text-4xl font-semibold leading-[1.03] tracking-[-0.025em] text-[var(--p-text)] sm:text-6xl" style={{ animationDelay: '0.08s' }}>
+            Contact us
+          </h1>
+          <p className="p-fade-up ismc-body mt-6 max-w-2xl text-lg leading-relaxed text-[var(--p-text-muted)]" style={{ animationDelay: '0.16s' }}>
+            Questions about registration, abstracts, the programme or sponsorship? Reach the {ismc.name} team and we&apos;ll get back to you.
+          </p>
+        </div>
+      </header>
 
-        {/* Contact Information */}
-        <section className="py-12 lg:py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-gray-800 dark:text-gray-100">Get In Touch</h2>
-                <div className="space-y-6 lg:space-y-8">
-                  <div className="flex items-start">
-                    <div className="bg-yellow-100 dark:bg-blue-900/30 p-3 rounded-full mr-4">
-                      <MapPin className="w-6 h-6 text-conference-primary dark:text-blue-400" />
-                    </div>
+      <section className="mx-auto max-w-7xl px-5 pb-24 pt-6 lg:px-10">
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Info */}
+          <div className="lg:col-span-5">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {infoItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <div key={item.title} className="p-glass flex items-start gap-4 rounded-2xl p-5">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: 'color-mix(in srgb, var(--p-accent) 16%, transparent)' }}>
+                      <Icon className="h-5 w-5" style={{ color: 'var(--p-accent-deep)' }} />
+                    </span>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">Venue</h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {conferenceConfig.venue.name}
-                        <br />
-                        {conferenceConfig.venue.city}, {conferenceConfig.venue.state}
-                        <br />
-                        {conferenceConfig.venue.country}
-                      </p>
+                      <h3 className="ismc-display text-base font-semibold text-[var(--p-text)]">{item.title}</h3>
+                      {item.lines.map((l, i) => (
+                        <p key={i} className="ismc-body text-sm leading-relaxed text-[var(--p-text-muted)]">{l}</p>
+                      ))}
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div className="bg-yellow-100 dark:bg-blue-900/30 p-3 rounded-full mr-4">
-                      <Phone className="w-6 h-6 text-conference-primary dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">Phone</h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {conferenceConfig.contact.phone}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="bg-yellow-100 dark:bg-blue-900/30 p-3 rounded-full mr-4">
-                      <Mail className="w-6 h-6 text-conference-primary dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">Email</h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        {conferenceConfig.contact.email}
-                      </p>
-                      {conferenceConfig.contact.supportEmail && (
-                        <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                          Support: {conferenceConfig.contact.supportEmail}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <div className="bg-yellow-100 dark:bg-blue-900/30 p-3 rounded-full mr-4">
-                      <Clock className="w-6 h-6 text-conference-primary dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">Working Hours</h3>
-                      <p className="text-gray-600 dark:text-gray-300">
-                        Monday - Friday: 9:00 AM - 6:00 PM
-                        <br />
-                        Available for conference inquiries
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 lg:p-8">
-                  <h2 className="text-xl lg:text-2xl font-bold mb-4 lg:mb-6 text-gray-800 dark:text-gray-100">Send Us a Message</h2>
-                  <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Name *</label>
-                      <Input
-                        value={formData.name}
-                        onChange={(e) => handleInputChange("name", e.target.value)}
-                        placeholder="Enter your full name"
-                        className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400 ${fieldErrors.name ? 'border-red-500 dark:border-red-500' : ''}`}
-                        required
-                      />
-                      {fieldErrors.name && (
-                        <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
-                      <Input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        placeholder="your.email@example.com"
-                        className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400 ${fieldErrors.email ? 'border-red-500 dark:border-red-500' : ''}`}
-                        required
-                      />
-                      {fieldErrors.email && (
-                        <p className="text-red-500 text-sm mt-1">{fieldErrors.email}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
-                      <Input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange("phone", e.target.value)}
-                        placeholder="+91 9876543210"
-                        className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400 ${fieldErrors.phone ? 'border-red-500 dark:border-red-500' : ''}`}
-                      />
-                      {fieldErrors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{fieldErrors.phone}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject *</label>
-                      <Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
-                        <SelectTrigger className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 ${fieldErrors.subject ? 'border-red-500 dark:border-red-500' : ''}`}>
-                          <SelectValue placeholder="Select subject" />
-                        </SelectTrigger>
-                        <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
-                          <SelectItem value="registration" className="dark:text-gray-100 dark:hover:bg-gray-600">Registration Inquiry</SelectItem>
-                          <SelectItem value="abstract" className="dark:text-gray-100 dark:hover:bg-gray-600">Abstract Submission</SelectItem>
-                          <SelectItem value="accommodation" className="dark:text-gray-100 dark:hover:bg-gray-600">Accommodation</SelectItem>
-                          <SelectItem value="program" className="dark:text-gray-100 dark:hover:bg-gray-600">Scientific Program</SelectItem>
-                          <SelectItem value="sponsorship" className="dark:text-gray-100 dark:hover:bg-gray-600">Sponsorship & Exhibition</SelectItem>
-                          <SelectItem value="other" className="dark:text-gray-100 dark:hover:bg-gray-600">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {fieldErrors.subject && (
-                        <p className="text-red-500 text-sm mt-1">{fieldErrors.subject}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message *</label>
-                      <Textarea
-                        value={formData.message}
-                        onChange={(e) => handleInputChange("message", e.target.value)}
-                        placeholder="Type your message here..."
-                        rows={5}
-                        className={`dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400 ${fieldErrors.message ? 'border-red-500 dark:border-red-500' : ''}`}
-                        required
-                      />
-                      <div className="flex justify-between items-center mt-1">
-                        <div>
-                          {fieldErrors.message && (
-                            <p className="text-red-500 text-sm">{fieldErrors.message}</p>
-                          )}
-                        </div>
-                        <p className={`text-xs ${formData.message.length < 10 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}`}>
-                          {formData.message.length}/1000 characters
-                        </p>
-                      </div>
-                    </div>
-                    {submitError && (
-                      <div className="text-red-600 dark:text-red-400 text-sm mb-4">
-                        {submitError}
-                      </div>
-                    )}
-                    <Button 
-                      type="submit" 
-                      disabled={isSubmitting}
-                      className="w-full bg-conference-primary hover:bg-conference-primary dark:bg-yellow-500 dark:hover:bg-conference-primary disabled:opacity-50"
-                    >
-                      <Send className="w-4 h-4 mr-2" />
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
-                    </Button>
-                  </form>
-                </div>
-              </motion.div>
+                )
+              })}
             </div>
           </div>
-        </section>
 
-        {/* Map Section */}
-        <section className="py-12 md:py-16">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-8 md:mb-12"
-            >
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-800 dark:text-white">Find Us</h2>
-              <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-sm md:text-base">
-                The conference will be held at {conferenceConfig.venue.name}, {conferenceConfig.venue.city}.
-              </p>
-            </motion.div>
-
-            <div className="rounded-2xl overflow-hidden shadow-xl h-64 md:h-96 bg-gray-200 dark:bg-gray-700">
-              <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-                <div className="text-center">
-                  <MapPin className="w-10 h-10 md:w-12 md:h-12 text-conference-primary dark:text-blue-400 mx-auto mb-4" />
-                  <p className="text-gray-700 dark:text-gray-200 font-semibold text-sm md:text-base">{conferenceConfig.venue.name}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">{conferenceConfig.venue.city}, {conferenceConfig.venue.state}</p>
-                </div>
+          {/* Form */}
+          <div className="lg:col-span-7">
+            {isSubmitted ? (
+              <div className="p-glass flex min-h-[26rem] flex-col items-center justify-center rounded-3xl p-10 text-center">
+                <CheckCircle className="mb-5 h-14 w-14" style={{ color: '#16a34a' }} />
+                <h2 className="ismc-display text-2xl font-semibold text-[var(--p-text)]">Message sent</h2>
+                <p className="ismc-body mt-3 max-w-sm text-[var(--p-text-muted)]">Thank you for contacting us. We&apos;ll get back to you shortly.</p>
+                <Button onClick={() => setIsSubmitted(false)} className="mt-6 rounded-full px-6 font-semibold" style={{ background: 'var(--p-accent)', color: '#0a1e40' }}>
+                  Send another message
+                </Button>
               </div>
-            </div>
+            ) : (
+              <div className="p-glass rounded-3xl p-6 sm:p-8">
+                <h2 className="ismc-display text-xl font-semibold text-[var(--p-text)] sm:text-2xl">Send us a message</h2>
+                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                  <div>
+                    <label className="ismc-body mb-2 block text-sm font-medium text-[var(--p-text)]">Your name *</label>
+                    <Input value={formData.name} onChange={(e) => handleInputChange("name", e.target.value)} placeholder="Enter your full name" className={`${fieldClass} ${fieldErrors.name ? 'border-red-500' : ''}`} required />
+                    {fieldErrors.name && <p className="mt-1 text-sm text-red-500">{fieldErrors.name}</p>}
+                  </div>
+                  <div>
+                    <label className="ismc-body mb-2 block text-sm font-medium text-[var(--p-text)]">Email address *</label>
+                    <Input type="email" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} placeholder="your.email@example.com" className={`${fieldClass} ${fieldErrors.email ? 'border-red-500' : ''}`} required />
+                    {fieldErrors.email && <p className="mt-1 text-sm text-red-500">{fieldErrors.email}</p>}
+                  </div>
+                  <div>
+                    <label className="ismc-body mb-2 block text-sm font-medium text-[var(--p-text)]">Phone number</label>
+                    <Input type="tel" value={formData.phone} onChange={(e) => handleInputChange("phone", e.target.value)} placeholder="+91 9876543210" className={`${fieldClass} ${fieldErrors.phone ? 'border-red-500' : ''}`} />
+                    {fieldErrors.phone && <p className="mt-1 text-sm text-red-500">{fieldErrors.phone}</p>}
+                  </div>
+                  <div>
+                    <label className="ismc-body mb-2 block text-sm font-medium text-[var(--p-text)]">Subject *</label>
+                    <Select value={formData.subject} onValueChange={(value) => handleInputChange("subject", value)}>
+                      <SelectTrigger className={`${fieldClass} ${fieldErrors.subject ? 'border-red-500' : ''}`}>
+                        <SelectValue placeholder="Select subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="registration">Registration Inquiry</SelectItem>
+                        <SelectItem value="abstract">Abstract Submission</SelectItem>
+                        <SelectItem value="accommodation">Accommodation</SelectItem>
+                        <SelectItem value="program">Scientific Program</SelectItem>
+                        <SelectItem value="sponsorship">Sponsorship &amp; Exhibition</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {fieldErrors.subject && <p className="mt-1 text-sm text-red-500">{fieldErrors.subject}</p>}
+                  </div>
+                  <div>
+                    <label className="ismc-body mb-2 block text-sm font-medium text-[var(--p-text)]">Message *</label>
+                    <Textarea value={formData.message} onChange={(e) => handleInputChange("message", e.target.value)} placeholder="Type your message here..." rows={5} className={`${fieldClass} ${fieldErrors.message ? 'border-red-500' : ''}`} required />
+                    <div className="mt-1 flex items-center justify-between">
+                      <span>{fieldErrors.message && <span className="text-sm text-red-500">{fieldErrors.message}</span>}</span>
+                      <span className={`text-xs ${formData.message.length < 10 ? 'text-red-500' : 'text-[var(--p-text-faint)]'}`}>{formData.message.length}/1000</span>
+                    </div>
+                  </div>
+                  {submitError && <div className="text-sm text-red-500">{submitError}</div>}
+                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-full font-semibold disabled:opacity-50" style={{ background: 'var(--p-accent)', color: '#0a1e40' }}>
+                    <Send className="mr-2 h-4 w-4" />
+                    {isSubmitting ? 'Sending...' : 'Send message'}
+                  </Button>
+                </form>
+              </div>
+            )}
           </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
   )
 }

@@ -1,6 +1,6 @@
 /**
  * Main Navigation Component
- * Responsive navigation with all links
+ * Responsive navigation with all links — premium (home-matched) styling.
  */
 
 'use client'
@@ -19,16 +19,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from './ui/dropdown-menu'
-import { Menu, X, LogOut, User, LayoutDashboard, Settings, ChevronDown, Shield, ClipboardList } from 'lucide-react'
-import { ThemeSwitcher } from './ThemeSwitcher'
-import { useConferenceTheme } from '../hooks/useConferenceTheme'
+import { Menu, X, LogOut, User, LayoutDashboard, ChevronDown, Shield, ClipboardList } from 'lucide-react'
+import { ThemeToggle } from '@/components/concepts/premium/ThemeToggle'
 import { MobileMenu } from './MobileResponsive'
+
+const linkBase =
+  'ismc-mono rounded-full px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] transition-colors'
 
 export function Navigation() {
   const { data: session } = useSession()
   const pathname = usePathname()
   const router = useRouter()
-  const theme = useConferenceTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const publicLinks = [
@@ -40,36 +41,37 @@ export function Navigation() {
     { href: '/contact', label: 'Contact' }
   ]
 
-  const userLinks = session ? [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/profile', label: 'Profile', icon: User }
-  ] : []
-
   const isActive = (href: string) => pathname === href
 
   return (
-    <nav className="bg-white dark:bg-[#181818] border-b dark:border-gray-800 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav
+      className="ismc-body sticky top-0 z-50 border-b"
+      style={{
+        borderColor: 'var(--p-border)',
+        background: 'var(--p-glass)',
+        backdropFilter: 'blur(18px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(18px) saturate(140%)',
+        color: 'var(--p-text)',
+      }}
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold" style={{ color: theme.primary }}>
-              {theme.config.shortName}
-            </span>
+          <Link href="/" className="ismc-display text-lg font-bold tracking-tight" style={{ color: 'var(--p-text)' }}>
+            TASMC<span style={{ color: 'var(--p-accent)' }}>26</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden items-center gap-0.5 md:flex">
             {publicLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(link.href)
-                    ? 'text-white'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                }`}
-                style={isActive(link.href) ? { backgroundColor: theme.primary } : {}}
+                className={linkBase}
+                style={{
+                  color: isActive(link.href) ? 'var(--p-text)' : 'var(--p-text-muted)',
+                  background: isActive(link.href) ? 'var(--p-glass-border)' : 'transparent',
+                }}
               >
                 {link.label}
               </Link>
@@ -77,28 +79,27 @@ export function Navigation() {
           </div>
 
           {/* Right Side */}
-          <div className="hidden md:flex items-center space-x-2">
-            {/* Theme switcher commented out for now */}
-            {/* <ThemeSwitcher /> */}
-            
+          <div className="hidden items-center gap-2 md:flex">
+            <ThemeToggle />
+
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
+                  <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-[var(--p-glass-border)]">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback style={{ backgroundColor: theme.primary, color: '#000' }}>
+                      <AvatarFallback style={{ background: 'var(--p-accent)', color: '#0a1e40' }}>
                         {session.user?.name?.charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="hidden lg:inline">{session.user?.name}</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
+                    <span className="ismc-body hidden text-sm font-medium lg:inline">{session.user?.name}</span>
+                    <ChevronDown className="h-4 w-4 opacity-60" />
+                  </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
+                <DropdownMenuContent align="end" className="w-56" style={{ background: 'var(--p-surface)', borderColor: 'var(--p-border)', color: 'var(--p-text)' }}>
                   <DropdownMenuLabel>
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium">{session.user?.name}</p>
-                      <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+                      <p className="text-xs" style={{ color: 'var(--p-text-muted)' }}>{session.user?.email}</p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -142,7 +143,7 @@ export function Navigation() {
                     </>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => signOut()}
                     className="cursor-pointer text-red-600 dark:text-red-400"
                   >
@@ -153,98 +154,88 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <>
-                <Button asChild variant="ghost">
-                  <Link href="/login">Log in</Link>
-                </Button>
-                <Button asChild style={{ backgroundColor: theme.primary, color: '#000000' }} className="hover:opacity-90">
-                  <Link href="/register">Register</Link>
-                </Button>
+                <Link
+                  href="/login"
+                  className={linkBase}
+                  style={{ color: 'var(--p-text-muted)' }}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="p-neon ismc-mono rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] transition-transform hover:-translate-y-px"
+                  style={{ background: 'var(--p-accent)', color: '#0a1e40' }}
+                >
+                  Register
+                </Link>
               </>
             )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            {/* Theme switcher commented out for now */}
-            {/* <ThemeSwitcher /> */}
-            <Button
-              variant="ghost"
-              size="icon"
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              aria-label="Toggle menu"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border transition-colors hover:bg-[var(--p-glass-border)]"
+              style={{ borderColor: 'var(--p-glass-border)', color: 'var(--p-text)' }}
             >
-              {mobileMenuOpen ? <X /> : <Menu />}
-            </Button>
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
-        <div className="px-4 py-6 space-y-3">
+        <div className="ismc-body space-y-1 px-4 py-6" style={{ color: 'var(--p-text)' }}>
           {publicLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block px-3 py-2 rounded-md text-base font-medium"
-              style={isActive(link.href) ? { backgroundColor: theme.primary, color: 'white' } : {}}
+              className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]"
+              style={isActive(link.href) ? { background: 'var(--p-glass-border)' } : {}}
               onClick={() => setMobileMenuOpen(false)}
             >
               {link.label}
             </Link>
           ))}
-          
-          <div className="border-t pt-3 mt-3">
+
+          <div className="mt-3 border-t pt-3" style={{ borderColor: 'var(--p-border)' }}>
             {session ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium"
+                  className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 {(session.user as any)?.role === 'admin' && (
                   <>
-                    <Link
-                      href="/admin"
-                      className="block px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
+                    <Link href="/admin" className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]" onClick={() => setMobileMenuOpen(false)}>
                       Admin Panel
                     </Link>
-                    <Link
-                      href="/manager"
-                      className="block px-3 py-2 rounded-md text-base font-medium"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
+                    <Link href="/manager" className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]" onClick={() => setMobileMenuOpen(false)}>
                       Manager Dashboard
                     </Link>
                   </>
                 )}
                 {(session.user as any)?.role === 'manager' && (
-                  <Link
-                    href="/manager"
-                    className="block px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                  <Link href="/manager" className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]" onClick={() => setMobileMenuOpen(false)}>
                     Manager Dashboard
                   </Link>
                 )}
                 {(session.user as any)?.role === 'reviewer' && (
-                  <Link
-                    href="/reviewer"
-                    className="block px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                  <Link href="/reviewer" className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]" onClick={() => setMobileMenuOpen(false)}>
                     Reviewer Dashboard
                   </Link>
                 )}
                 <button
-                  onClick={() => {
-                    signOut()
-                    setMobileMenuOpen(false)
-                  }}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => { signOut(); setMobileMenuOpen(false) }}
+                  className="block w-full rounded-xl px-3 py-2.5 text-left text-base font-medium text-red-600 transition-colors hover:bg-[var(--p-glass-border)] dark:text-red-400"
                 >
                   Logout
                 </button>
@@ -252,16 +243,16 @@ export function Navigation() {
             ) : (
               <>
                 <Link
-                  href="/auth/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium"
+                  href="/login"
+                  className="block rounded-xl px-3 py-2.5 text-base font-medium transition-colors hover:bg-[var(--p-glass-border)]"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Log in
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-white"
-                  style={{ backgroundColor: theme.primary }}
+                  className="mt-1 block rounded-full px-3 py-2.5 text-center text-base font-semibold"
+                  style={{ background: 'var(--p-accent)', color: '#0a1e40' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Register

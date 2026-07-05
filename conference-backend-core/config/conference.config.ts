@@ -202,10 +202,10 @@ export interface ConferenceConfig {
  */
 export const conferenceConfig: ConferenceConfig = {
   // Basic Information
-  name: "Indian Sports Medicine Conference 2026",
-  shortName: "ISMC 2026",
-  registrationPrefix: "ISMC2026",  // Prefix for registration IDs (ISMC2026-001, ISMC2026-002, etc.)
-  organizationName: "Indian Association of Sports Medicine (IASM) & Telangana Association of Sports Medicine (TASM)",
+  name: "Telangana Association of Sports Medicine Conference 2026",
+  shortName: "TASMC 2026",
+  registrationPrefix: "TASMC2026",  // Prefix for registration IDs (TASMC2026-001, TASMC2026-002, etc.)
+  organizationName: "Telangana Association of Sports Medicine (TASM)",
   tagline: "Uniting Science, Practice & Performance for Stronger Athletes",
   
   // Event Dates
@@ -223,7 +223,7 @@ export const conferenceConfig: ConferenceConfig = {
     state: "Telangana",
     country: "India",
     pincode: "500001",
-    description: "Hyderabad, a hub for sports science and elite healthcare, hosts the Indian Sports Medicine Conference 2026. The venue offers world-class facilities for clinical sessions, live demonstrations, and hands-on workshops.",
+    description: "Hyderabad, a hub for sports science and elite healthcare, hosts the Telangana Association of Sports Medicine Conference 2026. The venue offers world-class facilities for clinical sessions, live demonstrations, and hands-on workshops.",
     facilities: [
       "Main Conference Hall",
       "Multiple Breakout Rooms",
@@ -303,7 +303,7 @@ export const conferenceConfig: ConferenceConfig = {
     categories: [
       {
         key: "iasm-member",
-        label: "IASM / TASM Member",
+        label: "TASM Member",
         requiresMembership: true,
         membershipField: "membershipNumber"
       },
@@ -349,7 +349,7 @@ export const conferenceConfig: ConferenceConfig = {
     },
     
     bankDetails: {
-      accountName: "Indian Sports Medicine Conference 2026",  // TODO: confirm bank details
+      accountName: "Telangana Association of Sports Medicine Conference 2026",  // TODO: confirm bank details
       accountNumber: "0000000000",
       bankName: "TODO Bank",
       ifscCode: "TODO0000000",
@@ -409,9 +409,9 @@ export const conferenceConfig: ConferenceConfig = {
   
   // Email
   email: {
-    fromName: "Indian Sports Medicine Conference 2026",
+    fromName: "Telangana Association of Sports Medicine Conference 2026",
     replyTo: "noreply@indiansportsmedicine.com",
-    footerText: "© 2026 Indian Sports Medicine Conference — IASM & TASM. All rights reserved.",
+    footerText: "© 2026 Telangana Association of Sports Medicine Conference — TASM. All rights reserved.",
     logoUrl: "/logos/ismc-logo.png"
   },
 

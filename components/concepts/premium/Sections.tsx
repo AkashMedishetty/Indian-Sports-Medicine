@@ -272,7 +272,7 @@ export function Committee() {
             <Overline>The people behind it</Overline>
             <h2 className="ismc-display text-4xl font-semibold tracking-[-0.02em] text-[var(--p-text)] sm:text-5xl">Organising Committee</h2>
           </div>
-          <p className="ismc-body max-w-xs text-sm text-[var(--p-text-muted)]">A faculty drawn from across IASM and TASM, convened in Hyderabad.</p>
+          <p className="ismc-body max-w-xs text-sm text-[var(--p-text-muted)]">A faculty convened by the Telangana Association of Sports Medicine, in Hyderabad.</p>
         </div>
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
           {ismc.committee.map((c, i) => (
@@ -373,15 +373,15 @@ export function Organizers() {
   return (
     <section className="p-page py-20">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 px-5 text-center lg:px-10">
-        <Overline>Jointly convened by</Overline>
+        <Overline>Convened by</Overline>
         <div className="flex flex-col items-center gap-10 sm:flex-row sm:gap-16">
           {ismc.organizers.map((o, i) => (
             <div key={o.short} className="flex items-center gap-10 sm:gap-16">
               <div className="flex flex-col items-center">
                 <span className="ismc-display text-5xl font-bold tracking-tight text-[var(--p-text)]">{o.short}</span>
-                <span className="ismc-body mt-2 max-w-[14rem] text-xs text-[var(--p-text-muted)]">{o.name}</span>
+                <span className="ismc-body mt-2 max-w-[16rem] text-xs text-[var(--p-text-muted)]">{o.name}</span>
               </div>
-              {i === 0 && <span className="ismc-display text-3xl font-bold text-[var(--p-accent)]">×</span>}
+              {i < ismc.organizers.length - 1 && <span className="ismc-display text-3xl font-bold text-[var(--p-accent)]">×</span>}
             </div>
           ))}
         </div>
@@ -480,7 +480,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 lg:px-10">
         <div className="flex flex-col gap-8 pb-10 md:flex-row md:items-start md:justify-between">
           <div className="max-w-sm">
-            <div className="ismc-display text-2xl font-bold tracking-tight text-[var(--p-text)]">ISMC<span className="text-[var(--p-accent)]">26</span></div>
+            <div className="ismc-display text-2xl font-bold tracking-tight text-[var(--p-text)]">TASMC<span className="text-[var(--p-accent)]">26</span></div>
             <p className="ismc-body mt-4 text-sm leading-relaxed text-[var(--p-text-muted)]">{ismc.name}. {ismc.venue.label}, {ismc.dates.mainShort}.</p>
           </div>
           <div className="ismc-mono grid grid-cols-2 gap-x-12 gap-y-2 text-[11px] uppercase tracking-[0.18em] text-[var(--p-text-muted)] sm:grid-cols-3">
@@ -491,7 +491,7 @@ export function Footer() {
           </div>
         </div>
         <div className="flex items-center justify-between border-t pt-8" style={{ borderColor: 'var(--p-border)' }}>
-          <p className="ismc-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-faint)]">© 2026 ISMC — IASM &amp; TASM</p>
+          <p className="ismc-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-faint)]">© 2026 TASMC 2026 — Telangana Association of Sports Medicine</p>
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="ismc-mono inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-muted)] transition-colors hover:text-[var(--p-text)]">
             Top <ArrowUp className="h-3.5 w-3.5" />
           </button>

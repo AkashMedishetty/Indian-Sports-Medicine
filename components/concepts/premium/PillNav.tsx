@@ -24,7 +24,7 @@ export function PillNav({ base = '/v1' }: { base?: string }) {
         style={{ color: 'var(--p-text)' }}
       >
         <Link href={base} className="ismc-display mr-1.5 text-sm font-bold tracking-tight">
-          ISMC<span style={{ color: 'var(--p-accent)' }}>26</span>
+          TASMC<span style={{ color: 'var(--p-accent)' }}>26</span>
         </Link>
         <div className="ismc-mono hidden items-center md:flex">
           {ismc.nav.map((n) => (
