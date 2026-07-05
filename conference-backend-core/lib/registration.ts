@@ -7,12 +7,12 @@ export interface RegistrationWindows {
 	spotStart: Date
 }
 
-// ISSH 2026 registration windows
+// TASMC 2026 registration windows
 export const registrationWindows: RegistrationWindows = {
-	earlyBirdEnd: new Date("2026-03-31T23:59:59"),
-	regularStart: new Date("2026-04-01T00:00:00"),
-	regularEnd: new Date("2026-04-24T23:59:59"),
-	spotStart: new Date("2026-04-25T00:00:00"),
+	earlyBirdEnd: new Date("2026-07-31T23:59:59"),
+	regularStart: new Date("2026-08-01T00:00:00"),
+	regularEnd: new Date("2026-09-04T23:59:59"),
+	spotStart: new Date("2026-09-05T00:00:00"),
 }
 
 export function getCurrentTier(date: Date = new Date()): RegistrationTier {
@@ -31,8 +31,8 @@ export function getTierByDate(date: Date): RegistrationTier {
 }
 
 export const registrationLabels = {
-	earlyBird: "Early Bird upto 31/03/2026",
-	regular: "Regular 01/04/2026–24/04/2026",
+	earlyBird: "Early Bird upto 31/07/2026",
+	regular: "Regular 01/08/2026–04/09/2026",
 	spot: "Spot at the Conference",
 }
 
@@ -47,24 +47,33 @@ export interface TierPricing {
 	[category: string]: { amount: number; currency: "INR"; label?: string }
 }
 
+// TASMC tariff (₹). Member = TASM member (consultant/practitioner rate),
+// Non-Member = consultant/practitioner, Postgraduate = resident/student.
+// faculty/physiotherapist/international are provisional — confirm with client.
 const PRICING_BY_TIER: Record<RegistrationTier, TierPricing> = {
 	"Early Bird": {
-		"issh-member":     { amount: 5000, currency: "INR", label: "ISSH Member" },
-		"non-issh-member": { amount: 6000, currency: "INR", label: "Non ISSH Member" },
-		"postgraduate":    { amount: 2500, currency: "INR", label: "Postgraduate" },
-		"accompanying":    { amount: 3000, currency: "INR", label: "Accompanying Person/Spouse" },
+		"iasm-member":     { amount: 3500, currency: "INR", label: "TASM Member" },
+		"non-member":      { amount: 4000, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 3000, currency: "INR", label: "Postgraduate / Student" },
+		"faculty":         { amount: 3500, currency: "INR", label: "Faculty" },
+		"physiotherapist": { amount: 4000, currency: "INR", label: "Physiotherapist / Allied Health" },
+		"international":   { amount: 4000, currency: "INR", label: "International Delegate" },
 	},
 	"Regular": {
-		"issh-member":     { amount: 6000, currency: "INR", label: "ISSH Member" },
-		"non-issh-member": { amount: 7000, currency: "INR", label: "Non ISSH Member" },
-		"postgraduate":    { amount: 3000, currency: "INR", label: "Postgraduate" },
-		"accompanying":    { amount: 3500, currency: "INR", label: "Accompanying Person/Spouse" },
+		"iasm-member":     { amount: 4000, currency: "INR", label: "TASM Member" },
+		"non-member":      { amount: 4500, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 3500, currency: "INR", label: "Postgraduate / Student" },
+		"faculty":         { amount: 4000, currency: "INR", label: "Faculty" },
+		"physiotherapist": { amount: 4500, currency: "INR", label: "Physiotherapist / Allied Health" },
+		"international":   { amount: 4500, currency: "INR", label: "International Delegate" },
 	},
 	"Spot Registration": {
-		"issh-member":     { amount: 7000, currency: "INR", label: "ISSH Member" },
-		"non-issh-member": { amount: 8000, currency: "INR", label: "Non ISSH Member" },
-		"postgraduate":    { amount: 3500, currency: "INR", label: "Postgraduate" },
-		"accompanying":    { amount: 4000, currency: "INR", label: "Accompanying Person/Spouse" },
+		"iasm-member":     { amount: 5000, currency: "INR", label: "TASM Member" },
+		"non-member":      { amount: 5000, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 4000, currency: "INR", label: "Postgraduate / Student" },
+		"faculty":         { amount: 5000, currency: "INR", label: "Faculty" },
+		"physiotherapist": { amount: 5000, currency: "INR", label: "Physiotherapist / Allied Health" },
+		"international":   { amount: 5000, currency: "INR", label: "International Delegate" },
 	},
 }
 
