@@ -177,25 +177,41 @@ export function About() {
 
 /* --------------------------------------------------------------- STATS */
 function CountUp({ value }: { value: string }) {
-  const m = value.match(/^(\+?)(\d+)(.*)$/);
   const ref = useRef<HTMLSpanElement>(null);
   const seen = useInView(ref, { once: true, margin: '-60px' });
-  const [n, setN] = useState(0);
+  const reduce = useReducedMotion();
+  // Parse into STABLE primitives — a fresh `value.match()` array in the deps
+  // was restarting the animation every frame, so it never left 0.
+  const m = value.match(/^(\+?)(\d+)(.*)$/);
+  const isNum = !!m;
+  const prefix = m ? m[1] : '';
   const target = m ? parseInt(m[2], 10) : 0;
+  const suffix = m ? m[3] : '';
+  const [n, setN] = useState(0);
+  // Mount guard: no matter what (observer never fires, rAF throttled, tab
+  // backgrounded), the real number always shows within ~1.6s. Never sticks at 0.
   useEffect(() => {
-    if (!m || !seen) return;
+    if (!isNum) return;
+    const guard = setTimeout(() => setN((cur) => (cur === 0 ? target : cur)), 1600);
+    return () => clearTimeout(guard);
+  }, [isNum, target]);
+  // Scroll-triggered count-up (progressive enhancement)
+  useEffect(() => {
+    if (!isNum || !seen) return;
+    if (reduce) { setN(target); return; }
     let raf = 0;
     const start = performance.now();
     const tick = (t: number) => {
       const p = Math.min(1, (t - start) / 1100);
       setN(Math.round(target * (1 - Math.pow(1 - p, 3))));
       if (p < 1) raf = requestAnimationFrame(tick);
+      else setN(target);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [seen, target, m]);
-  if (!m) return <span ref={ref}>{value}</span>;
-  return <span ref={ref}>{m[1]}{n}{m[3]}</span>;
+  }, [seen, target, isNum, reduce]);
+  if (!isNum) return <span ref={ref}>{value}</span>;
+  return <span ref={ref}>{prefix}{n}{suffix}</span>;
 }
 
 export function Stats() {
@@ -496,7 +512,7 @@ export function CtaOutline() {
             Submit an abstract
           </Link>
         </div>
-        <p className="ismc-mono mt-8 text-[11px] uppercase tracking-[0.22em] text-[var(--p-text-faint)]">Conference Secretary — {ismc.registration.secretary}</p>
+        <p className="ismc-mono mt-8 text-[11px] uppercase tracking-[0.22em] text-[var(--p-text-faint)]">Organising Secretaries — {ismc.registration.secretary}</p>
       </div>
     </section>
   );

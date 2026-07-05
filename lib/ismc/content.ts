@@ -30,8 +30,8 @@ export const ismc = {
   },
 
   registration: {
-    status: 'Open Soon' as const,
-    secretary: 'Dr. Nithin',
+    status: 'Open' as const,
+    secretary: 'Dr. Sunil Apsingi & Dr. Sukesh',
   },
 
   organizers: [
@@ -140,13 +140,13 @@ export const ismc = {
     ],
   },
 
-  // Committee — placeholders (TODO: confirm names/photos)
+  // Committee (TODO: add photos + remaining office bearers)
   committee: [
-    { name: 'Dr. Nithin', role: 'Conference Secretary', org: 'TASM', photo: '/ismc/committee/secretary.jpg' },
-    { name: 'To be announced', role: 'Organising Chairman', org: 'TASM', photo: '/ismc/committee/chairman.jpg' },
+    { name: 'Dr. Nithin Bejjanki', role: 'Conference President', org: 'TASM', photo: '/ismc/committee/president.jpg' },
+    { name: 'Dr. Sunil Apsingi', role: 'Organising Secretary', org: 'TASM', photo: '/ismc/committee/sunil.jpg' },
+    { name: 'Dr. Sukesh', role: 'Organising Secretary', org: 'TASM', photo: '/ismc/committee/sukesh.jpg' },
     { name: 'To be announced', role: 'Scientific Chair', org: 'TASM', photo: '/ismc/committee/scientific.jpg' },
     { name: 'To be announced', role: 'Treasurer', org: 'TASM', photo: '/ismc/committee/treasurer.jpg' },
-    { name: 'To be announced', role: 'Workshop Convener', org: 'TASM', photo: '/ismc/committee/workshop.jpg' },
     { name: 'To be announced', role: 'Joint Secretary', org: 'TASM', photo: '/ismc/committee/joint.jpg' },
   ],
 
