@@ -52,28 +52,19 @@ export interface TierPricing {
 // faculty/physiotherapist/international are provisional — confirm with client.
 const PRICING_BY_TIER: Record<RegistrationTier, TierPricing> = {
 	"Early Bird": {
-		"iasm-member":     { amount: 3500, currency: "INR", label: "TASM Member" },
-		"non-member":      { amount: 4000, currency: "INR", label: "Non-Member" },
-		"postgraduate":    { amount: 3000, currency: "INR", label: "Postgraduate / Student" },
-		"faculty":         { amount: 3500, currency: "INR", label: "Faculty" },
-		"physiotherapist": { amount: 4000, currency: "INR", label: "Physiotherapist / Allied Health" },
-		"international":   { amount: 4000, currency: "INR", label: "International Delegate" },
+		"iasm-member":  { amount: 3500, currency: "INR", label: "TASM Member" },
+		"non-member":   { amount: 4000, currency: "INR", label: "Non-Member" },
+		"postgraduate": { amount: 3000, currency: "INR", label: "Resident / PG" },
 	},
 	"Regular": {
-		"iasm-member":     { amount: 4000, currency: "INR", label: "TASM Member" },
-		"non-member":      { amount: 4500, currency: "INR", label: "Non-Member" },
-		"postgraduate":    { amount: 3500, currency: "INR", label: "Postgraduate / Student" },
-		"faculty":         { amount: 4000, currency: "INR", label: "Faculty" },
-		"physiotherapist": { amount: 4500, currency: "INR", label: "Physiotherapist / Allied Health" },
-		"international":   { amount: 4500, currency: "INR", label: "International Delegate" },
+		"iasm-member":  { amount: 4000, currency: "INR", label: "TASM Member" },
+		"non-member":   { amount: 4500, currency: "INR", label: "Non-Member" },
+		"postgraduate": { amount: 3500, currency: "INR", label: "Resident / PG" },
 	},
 	"Spot Registration": {
-		"iasm-member":     { amount: 5000, currency: "INR", label: "TASM Member" },
-		"non-member":      { amount: 5000, currency: "INR", label: "Non-Member" },
-		"postgraduate":    { amount: 4000, currency: "INR", label: "Postgraduate / Student" },
-		"faculty":         { amount: 5000, currency: "INR", label: "Faculty" },
-		"physiotherapist": { amount: 5000, currency: "INR", label: "Physiotherapist / Allied Health" },
-		"international":   { amount: 5000, currency: "INR", label: "International Delegate" },
+		"iasm-member":  { amount: 5000, currency: "INR", label: "TASM Member" },
+		"non-member":   { amount: 5000, currency: "INR", label: "Non-Member" },
+		"postgraduate": { amount: 4000, currency: "INR", label: "Resident / PG" },
 	},
 }
 

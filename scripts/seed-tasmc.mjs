@@ -23,11 +23,7 @@ const bank = {
 const tier = (amounts) => ({
   'iasm-member': { amount: amounts.member, currency: 'INR', label: 'TASM Member' },
   'non-member': { amount: amounts.nonMember, currency: 'INR', label: 'Non-Member' },
-  'postgraduate': { amount: amounts.student, currency: 'INR', label: 'Postgraduate / Student' },
-  // guesses — FLAGGED for confirmation
-  'faculty': { amount: amounts.member, currency: 'INR', label: 'Faculty' },
-  'physiotherapist': { amount: amounts.nonMember, currency: 'INR', label: 'Physiotherapist / Allied Health' },
-  'international': { amount: amounts.nonMember, currency: 'INR', label: 'International Delegate' },
+  'postgraduate': { amount: amounts.student, currency: 'INR', label: 'Resident / PG' },
 });
 
 const client = new MongoClient(uri);

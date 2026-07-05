@@ -640,8 +640,8 @@ export default function RegisterPage() {
           return false
         }
 
-        // HOD form is mandatory for PG/Student
-        if (formData.designation === 'PG/Student' && !formData.hodForm) {
+        // HOD form no longer required for TASMC (was mandatory for PG/Student)
+        if (false) {
           console.log('HOD form missing for PG/Student')
           setTouchedFields(prev => ({ ...prev, hodForm: true }))
           toast({
@@ -1427,8 +1427,8 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* HOD Recommendation Form - Required for PG/Student */}
-                {formData.designation === 'PG/Student' && (
+                {/* HOD Recommendation Form — removed for TASMC (was PG/Student only) */}
+                {false && (
                   <div className="col-span-full" data-hod-upload>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       HOD Recommendation Form <span className="text-red-500">*</span>
@@ -2025,8 +2025,8 @@ export default function RegisterPage() {
               </p>
             </div> */}
 
-            {/* Accommodation / Hotel Booking Section */}
-            <div className="border-t pt-6">
+            {/* Accommodation / Hotel Booking Section — hidden for TASMC (ISSH-only feature) */}
+            <div className="border-t pt-6 hidden">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Hotel Accommodation (Optional)</h3>
               </div>

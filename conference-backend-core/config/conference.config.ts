@@ -313,19 +313,7 @@ export const conferenceConfig: ConferenceConfig = {
       },
       {
         key: "postgraduate",
-        label: "Postgraduate / Student"
-      },
-      {
-        key: "faculty",
-        label: "Faculty"
-      },
-      {
-        key: "physiotherapist",
-        label: "Physiotherapist / Allied Health"
-      },
-      {
-        key: "international",
-        label: "International Delegate"
+        label: "Resident / PG"
       }
     ],
 
