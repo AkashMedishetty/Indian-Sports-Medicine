@@ -37,6 +37,7 @@ export function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/program-schedule', label: 'Program' },
     { href: '/abstracts', label: 'Abstracts' },
+    { href: '/pricing', label: 'Fees' },
     { href: '/venue', label: 'Venue' },
     { href: '/contact', label: 'Contact' }
   ]

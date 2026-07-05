@@ -63,6 +63,7 @@ export const ismc = {
     { label: 'Program', href: '/program-schedule' },
     { label: 'Workshop', href: '/register#workshops' },
     { label: 'Abstracts', href: '/abstracts' },
+    { label: 'Fees', href: '/pricing' },
     { label: 'Venue', href: '/venue' },
     { label: 'Contact', href: '/contact' },
   ],
