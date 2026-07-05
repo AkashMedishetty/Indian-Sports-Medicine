@@ -16,6 +16,20 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
       <div className="relative mx-auto grid min-h-[100svh] max-w-7xl grid-cols-1 items-center gap-6 px-5 pb-24 pt-28 lg:grid-cols-12 lg:px-10">
         {/* copy — CSS-driven entrance (robust, always ends visible) */}
         <div className="lg:col-span-6 xl:col-span-5">
+          {/* Convened by — organising association logos, above the copy */}
+          <div className="p-fade-up mb-7 flex flex-wrap items-center gap-x-5 gap-y-3" style={{ animationDelay: '0.02s' }}>
+            {ismc.organizers.map((o) =>
+              o.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={o.short} src={o.logo} alt={o.name} title={o.name} className="h-11 w-auto object-contain sm:h-12" />
+              ) : (
+                <span key={o.short} title={o.name} className="ismc-display text-lg font-bold tracking-tight text-[var(--p-text)]">
+                  {o.short}
+                </span>
+              )
+            )}
+          </div>
+
           <p
             className="p-fade-up ismc-mono mb-6 text-[11px] uppercase tracking-[0.28em] text-[var(--p-text-muted)]"
             style={{ animationDelay: '0.05s' }}
@@ -74,23 +88,6 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
             >
               Submit an abstract
             </Link>
-          </div>
-
-          {/* Convened by — organising associations */}
-          <div className="p-fade-up mt-10" style={{ animationDelay: '0.82s' }}>
-            <p className="ismc-mono mb-3 text-[10px] uppercase tracking-[0.24em] text-[var(--p-text-faint)]">Convened by</p>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              {ismc.organizers.map((o) =>
-                o.logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={o.short} src={o.logo} alt={o.name} title={o.name} className="h-10 w-auto object-contain sm:h-11" />
-                ) : (
-                  <span key={o.short} title={o.name} className="ismc-display text-lg font-bold tracking-tight text-[var(--p-text)]">
-                    {o.short}
-                  </span>
-                )
-              )}
-            </div>
           </div>
         </div>
 

@@ -349,11 +349,11 @@ export const conferenceConfig: ConferenceConfig = {
     },
     
     bankDetails: {
-      accountName: "Telangana Association of Sports Medicine Conference 2026",  // TODO: confirm bank details
-      accountNumber: "0000000000",
-      bankName: "TODO Bank",
-      ifscCode: "TODO0000000",
-      branchName: "Hyderabad"
+      accountName: "APPLE EVENTS",
+      accountNumber: "80950200001310",
+      bankName: "Bank of Baroda",
+      ifscCode: "BARB0VJMAKO",  // BARB0 (with zero) + branch VJMAKO — verify O vs 0 with the bank
+      branchName: "Manikonda - Jagir Branch, Hyderabad 500089"
     },
 
     tiers: {
