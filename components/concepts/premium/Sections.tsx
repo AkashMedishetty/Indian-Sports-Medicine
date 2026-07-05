@@ -369,21 +369,90 @@ export function VenueCity() {
 }
 
 /* ----------------------------------------------------------- ORGANIZERS */
+function OrgLogo({ o }: { o: { short: string; name: string; logo: string } }) {
+  const [err, setErr] = useState(false);
+  if (o.logo && !err) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={o.logo} alt={o.name} onError={() => setErr(true)} className="h-24 w-auto object-contain sm:h-28" />;
+  }
+  return <span className="ismc-display text-4xl font-bold tracking-tight text-[var(--p-text)] sm:text-5xl">{o.short}</span>;
+}
+
 export function Organizers() {
   return (
     <section className="p-page py-20">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 px-5 text-center lg:px-10">
         <Overline>Convened by</Overline>
-        <div className="flex flex-col items-center gap-10 sm:flex-row sm:gap-16">
-          {ismc.organizers.map((o, i) => (
-            <div key={o.short} className="flex items-center gap-10 sm:gap-16">
-              <div className="flex flex-col items-center">
-                <span className="ismc-display text-5xl font-bold tracking-tight text-[var(--p-text)]">{o.short}</span>
-                <span className="ismc-body mt-2 max-w-[16rem] text-xs text-[var(--p-text-muted)]">{o.name}</span>
+        <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-10 sm:gap-x-16">
+          {ismc.organizers.map((o) => (
+            <div key={o.short} className="flex w-40 flex-col items-center gap-3">
+              <div className="flex h-28 items-center justify-center">
+                <OrgLogo o={o} />
               </div>
-              {i < ismc.organizers.length - 1 && <span className="ismc-display text-3xl font-bold text-[var(--p-accent)]">×</span>}
+              <span className="ismc-body max-w-[12rem] text-xs leading-snug text-[var(--p-text-muted)]">{o.name}</span>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- FEES */
+const inr = (n: number) => `₹${n.toLocaleString('en-IN')}`;
+
+export function Fees() {
+  return (
+    <section className="p-page py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-5 lg:px-10">
+        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Overline>Registration fees</Overline>
+            <h2 className="ismc-display text-4xl font-semibold tracking-[-0.02em] text-[var(--p-text)] sm:text-5xl">Fees &amp; registration</h2>
+          </div>
+          <p className="ismc-body max-w-xs text-sm text-[var(--p-text-muted)]">In Indian Rupees (₹). Early-bird rates apply until {ismc.fees.earlyBirdUntil}.</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {ismc.fees.tiers.map((tier) => (
+            <div key={tier.category} className="p-glass rounded-3xl p-6 sm:p-8">
+              <h3 className="ismc-display text-xl font-semibold text-[var(--p-text)] sm:text-2xl">{tier.category}</h3>
+              <div className="mt-6">
+                <div className="grid grid-cols-[1fr_auto_auto] items-end gap-x-6 border-b pb-2" style={{ borderColor: 'var(--p-border)' }}>
+                  <span />
+                  <span className="ismc-mono text-right text-[10px] uppercase tracking-[0.16em] text-[var(--p-text-faint)]">Member</span>
+                  <span className="ismc-mono text-right text-[10px] uppercase tracking-[0.16em] text-[var(--p-text-faint)]">Non-member</span>
+                </div>
+                {tier.rows.map((r) => (
+                  <div key={r.period} className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-6 border-b py-4" style={{ borderColor: 'var(--p-border)' }}>
+                    <div>
+                      <div className="ismc-body text-sm font-semibold text-[var(--p-text)]">{r.period}</div>
+                      <div className="ismc-mono mt-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--p-text-faint)]">{r.sub}</div>
+                    </div>
+                    <div className="ismc-display text-right text-lg font-semibold text-[var(--p-text)]">{inr(r.member)}</div>
+                    <div className="ismc-display text-right text-lg font-semibold text-[var(--p-text)]">{inr(r.nonMember)}</div>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between pt-4">
+                  <div>
+                    <div className="ismc-body text-sm font-semibold text-[var(--p-text)]">Spot registration</div>
+                    <div className="ismc-mono mt-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--p-text-faint)]">On-site</div>
+                  </div>
+                  <div className="ismc-display text-lg font-semibold" style={{ color: 'var(--p-accent-deep)' }}>{inr(tier.spot)}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-col gap-4 rounded-3xl border p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8" style={{ borderColor: 'var(--p-border)', background: 'var(--p-bg-soft)' }}>
+          <p className="ismc-body text-sm text-[var(--p-text)]">
+            <span className="font-semibold">Residential packages</span> (stay + registration) are available on request — discounted rates apply.
+          </p>
+          <Link href={ismc.cta.register} className="p-neon group inline-flex shrink-0 items-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-semibold transition-transform hover:-translate-y-0.5" style={{ background: 'var(--p-accent)', color: '#0a1e40' }}>
+            Register now
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
     </section>

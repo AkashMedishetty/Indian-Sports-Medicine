@@ -10,6 +10,7 @@ import {
   StatsPills,
   Committee,
   VenueCity,
+  Fees,
   Organizers,
   CtaOutline,
   Brochures,
@@ -40,6 +41,7 @@ export function PremiumPage({
       {v4 ? <StatsPills /> : <Stats />}
       <Committee />
       <VenueCity />
+      <Fees />
       <Organizers />
       <CtaOutline />
       <Brochures />

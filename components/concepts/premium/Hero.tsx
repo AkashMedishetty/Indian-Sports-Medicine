@@ -49,7 +49,7 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
           >
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.dates.mainShort}</span>
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.venue.city}</span>
-            <span><span className="text-[var(--p-accent-deep)]">●</span> Registrations open soon</span>
+            <span><span className="text-[var(--p-accent-deep)]">●</span> Early bird till Jul 31</span>
           </div>
 
           <div className="p-fade-up mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: '0.7s' }}>
@@ -74,6 +74,23 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
             >
               Submit an abstract
             </Link>
+          </div>
+
+          {/* Convened by — organising associations */}
+          <div className="p-fade-up mt-10" style={{ animationDelay: '0.82s' }}>
+            <p className="ismc-mono mb-3 text-[10px] uppercase tracking-[0.24em] text-[var(--p-text-faint)]">Convened by</p>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              {ismc.organizers.map((o) =>
+                o.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={o.short} src={o.logo} alt={o.name} title={o.name} className="h-10 w-auto object-contain sm:h-11" />
+                ) : (
+                  <span key={o.short} title={o.name} className="ismc-display text-lg font-bold tracking-tight text-[var(--p-text)]">
+                    {o.short}
+                  </span>
+                )
+              )}
+            </div>
           </div>
         </div>
 
