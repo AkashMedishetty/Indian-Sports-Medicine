@@ -295,7 +295,7 @@ export const conferenceConfig: ConferenceConfig = {
     // Form field options (used in dropdowns and validation)
     formFields: {
       titles: ['Dr.', 'Prof.', 'Mr.', 'Mrs.', 'Ms.'],
-      designations: ['Consultant', 'PG/Student', 'Faculty', 'Physiotherapist', 'Sports Scientist', 'Athletic Trainer', 'Other'],
+      designations: ['Consultant', 'Physiotherapist', 'Strength & Conditioning Coach', 'Psychologist', 'Nutritionist', 'Postgraduate'],
       relationshipTypes: ['Spouse', 'Child', 'Parent', 'Friend', 'Colleague', 'Other'],
       paymentMethods: ['bank-transfer', 'online', 'pay-now', 'cash']
     },
@@ -303,7 +303,7 @@ export const conferenceConfig: ConferenceConfig = {
     categories: [
       {
         key: "iasm-member",
-        label: "TASM Member",
+        label: "IASM Member",
         requiresMembership: true,
         membershipField: "membershipNumber"
       },
@@ -313,7 +313,7 @@ export const conferenceConfig: ConferenceConfig = {
       },
       {
         key: "postgraduate",
-        label: "Resident / PG"
+        label: "Postgraduate"
       }
     ],
 

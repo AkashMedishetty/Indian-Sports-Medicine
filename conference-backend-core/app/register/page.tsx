@@ -410,19 +410,15 @@ export default function RegisterPage() {
     setFormData((prev) => {
       const newData = { ...prev, [field]: value }
 
-      // Auto-select registration type based on designation (if applicable)
+      // Derive the pricing key from the selected category (designation).
+      // Postgraduate is a flat rate; every other category is priced by membership
+      // (IASM Member / Non-Member), which the user picks separately.
       if (field === 'designation') {
-        // Find postgraduate/student/resident category if exists
-        const studentCategory = conferenceConfig.registration.categories.find(cat => 
-          cat.label.toLowerCase().includes('student') || 
-          cat.label.toLowerCase().includes('resident') ||
-          cat.label.toLowerCase().includes('postgraduate')
-        )
-        
-        if (value === 'PG/Student' && studentCategory) {
-          newData.registrationType = studentCategory.key
-        } else if (value === 'Consultant' && studentCategory && prev.registrationType === studentCategory.key) {
-          // Clear postgraduate category if consultant is selected
+        if (value === 'Postgraduate') {
+          newData.registrationType = 'postgraduate'
+          newData.membershipNumber = ''
+        } else if (prev.registrationType === 'postgraduate') {
+          // Switched away from Postgraduate → let them choose membership
           newData.registrationType = ''
         }
       }
@@ -1186,7 +1182,6 @@ export default function RegisterPage() {
         password: formData.password,
         confirmPassword: formData.confirmPassword,
         institution: formData.institution,
-        mciNumber: formData.mciNumber,
         address: formData.address,
         city: formData.city,
         state: formData.state,
@@ -1394,10 +1389,10 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Designation *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Registration Category *</label>
                   <Select value={formData.designation} onValueChange={(value) => handleInputChange("designation", value)}>
                     <SelectTrigger className="h-10">
-                      <SelectValue placeholder="Select designation" />
+                      <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Consultant">Consultant</SelectItem>
@@ -1721,7 +1716,12 @@ export default function RegisterPage() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Registration Type *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Membership *</label>
+                {formData.designation === 'Postgraduate' && (
+                  <div className="mb-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-gray-700">
+                    Postgraduate registration — a flat rate applies; no membership needed.
+                  </div>
+                )}
                 {/* Special Offer Banner */}
                 {currentTier && (
                   <div className="bg-conference-primary text-black p-3 rounded-lg mb-3">
@@ -1742,22 +1742,11 @@ export default function RegisterPage() {
               >
                 {registrationTypes
                   .filter(type => {
-                    // Find postgraduate/student/resident category
-                    const studentCategory = conferenceConfig.registration.categories.find(cat => 
-                      cat.label.toLowerCase().includes('student') || 
-                      cat.label.toLowerCase().includes('resident') ||
-                      cat.label.toLowerCase().includes('postgraduate')
-                    )
-                    
-                    // If designation is PG/Student, only show postgraduate option
-                    if (formData.designation === 'PG/Student' && studentCategory) {
-                      return type.value === studentCategory.key
-                    }
-                    // If designation is Consultant, show all except postgraduate
-                    if (formData.designation === 'Consultant' && studentCategory) {
-                      return type.value !== studentCategory.key
-                    }
-                    // If no designation selected yet, show all
+                    // Postgraduate pricing is derived from the category (flat rate),
+                    // so it's never a membership option; and membership doesn't apply
+                    // when the category is Postgraduate.
+                    if (type.value === 'postgraduate') return false
+                    if (formData.designation === 'Postgraduate') return false
                     return true
                   })
                   .map((type) => (
@@ -1772,7 +1761,7 @@ export default function RegisterPage() {
               {touchedFields.registrationType && !formData.registrationType && (
                 <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
-                  Please select a registration type
+                  Please select your membership (IASM Member or Non-Member)
                 </p>
               )}
             </div>
@@ -1786,7 +1775,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">MCI Number *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">MCI Number (optional)</label>
               <Input
                 value={formData.mciNumber}
                 onChange={(e) => {
@@ -1796,19 +1785,12 @@ export default function RegisterPage() {
                   }
                 }}
                 placeholder="MCI number"
-                required
                 className="h-10"
               />
               {formData.mciNumber && !/^[a-zA-Z0-9-]{3,}$/.test(formData.mciNumber) && (
                 <p className="text-xs text-orange-600 mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
                   MCI number must be at least 3 characters
-                </p>
-              )}
-              {touchedFields.mciNumber && !formData.mciNumber && (
-                <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" />
-                  MCI/NMC number is required
                 </p>
               )}
             </div>

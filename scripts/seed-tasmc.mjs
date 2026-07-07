@@ -21,9 +21,9 @@ const bank = {
 
 // tariff → pricing per tier, keyed by the config.registration category keys
 const tier = (amounts) => ({
-  'iasm-member': { amount: amounts.member, currency: 'INR', label: 'TASM Member' },
+  'iasm-member': { amount: amounts.member, currency: 'INR', label: 'IASM Member' },
   'non-member': { amount: amounts.nonMember, currency: 'INR', label: 'Non-Member' },
-  'postgraduate': { amount: amounts.student, currency: 'INR', label: 'Resident / PG' },
+  'postgraduate': { amount: amounts.student, currency: 'INR', label: 'Postgraduate' },
 });
 
 const client = new MongoClient(uri);

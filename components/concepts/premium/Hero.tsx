@@ -20,7 +20,7 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
           <div className="p-fade-up mb-7" style={{ animationDelay: '0.02s' }}>
             <p className="ismc-mono mb-2.5 text-[10px] uppercase tracking-[0.26em] text-[var(--p-text-faint)]">Convened by</p>
             <div className="flex flex-wrap items-center gap-2.5">
-              {ismc.organizers.map((o) =>
+              {(ismc.organizers as ReadonlyArray<{ short: string; name: string; logo: string }>).map((o) =>
                 o.logo ? (
                   <span
                     key={o.short}
