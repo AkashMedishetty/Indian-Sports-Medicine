@@ -53,14 +53,13 @@ export async function POST(request: NextRequest) {
     console.log('📝 Registration:', JSON.stringify(registration, null, 2))
     console.log('💳 Payment method:', payment?.method)
 
-    // Validate required fields
-    if (!email || !password || !profile?.firstName || !profile?.lastName || !profile?.mciNumber) {
+    // Validate required fields (MCI is optional for TASMC)
+    if (!email || !password || !profile?.firstName || !profile?.lastName) {
       console.log('❌ Missing required fields:', {
         email: !!email,
         password: !!password,
         firstName: !!profile?.firstName,
-        lastName: !!profile?.lastName,
-        mciNumber: !!profile?.mciNumber
+        lastName: !!profile?.lastName
       })
       return NextResponse.json({
         success: false,
@@ -69,8 +68,7 @@ export async function POST(request: NextRequest) {
           email: !email ? 'missing' : 'ok',
           password: !password ? 'missing' : 'ok',
           firstName: !profile?.firstName ? 'missing' : 'ok',
-          lastName: !profile?.lastName ? 'missing' : 'ok',
-          mciNumber: !profile?.mciNumber ? 'missing' : 'ok'
+          lastName: !profile?.lastName ? 'missing' : 'ok'
         }
       }, { status: 400 })
     }

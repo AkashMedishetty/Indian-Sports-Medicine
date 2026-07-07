@@ -189,7 +189,7 @@ const UserSchema = new Schema<IUser>({
     },
     profilePicture: String,
     dietaryRequirements: String,
-    mciNumber: { type: String, required: true },
+    mciNumber: { type: String, required: false },
     hodFormUrl: String,
     specialNeeds: String
   },
