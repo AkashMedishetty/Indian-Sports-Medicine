@@ -36,16 +36,22 @@ export const ismc = {
 
   organizers: [
     {
-      name: 'Telangana Orthopaedic Surgeons Association',
-      short: 'TOSA',
-      scope: 'Telangana',
-      logo: '/logos/tosa.png',
+      name: 'Indian Association of Sports Medicine',
+      short: 'IASM',
+      scope: 'National',
+      logo: '/logos/ias.jpeg',
     },
     {
       name: 'Telangana Association of Sports Medicine',
       short: 'TASM',
       scope: 'Telangana',
-      logo: '', // TODO: drop tasm.png in /public/logos and set '/logos/tasm.png' (shows text until then)
+      logo: '/logos/tasm.jpeg',
+    },
+    {
+      name: 'Telangana Orthopaedic Surgeons Association',
+      short: 'TOSA',
+      scope: 'Telangana',
+      logo: '/logos/tosa.png',
     },
     {
       name: 'Telangana Physiotherapists Association',

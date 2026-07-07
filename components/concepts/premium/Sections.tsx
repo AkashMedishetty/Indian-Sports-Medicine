@@ -388,8 +388,12 @@ export function VenueCity() {
 function OrgLogo({ o }: { o: { short: string; name: string; logo: string } }) {
   const [err, setErr] = useState(false);
   if (o.logo && !err) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={o.logo} alt={o.name} onError={() => setErr(true)} className="h-24 w-auto object-contain sm:h-28" />;
+    return (
+      <span className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white p-2.5 shadow-sm ring-1 ring-black/5 sm:h-28 sm:w-28">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={o.logo} alt={o.name} onError={() => setErr(true)} className="h-full w-full object-contain" />
+      </span>
+    );
   }
   return <span className="ismc-display text-4xl font-bold tracking-tight text-[var(--p-text)] sm:text-5xl">{o.short}</span>;
 }

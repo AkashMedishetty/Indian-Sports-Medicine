@@ -17,17 +17,26 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
         {/* copy — CSS-driven entrance (robust, always ends visible) */}
         <div className="lg:col-span-6 xl:col-span-5">
           {/* Convened by — organising association logos, above the copy */}
-          <div className="p-fade-up mb-7 flex flex-wrap items-center gap-x-5 gap-y-3" style={{ animationDelay: '0.02s' }}>
-            {ismc.organizers.map((o) =>
-              o.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={o.short} src={o.logo} alt={o.name} title={o.name} className="h-11 w-auto object-contain sm:h-12" />
-              ) : (
-                <span key={o.short} title={o.name} className="ismc-display text-lg font-bold tracking-tight text-[var(--p-text)]">
-                  {o.short}
-                </span>
-              )
-            )}
+          <div className="p-fade-up mb-7" style={{ animationDelay: '0.02s' }}>
+            <p className="ismc-mono mb-2.5 text-[10px] uppercase tracking-[0.26em] text-[var(--p-text-faint)]">Convened by</p>
+            <div className="flex flex-wrap items-center gap-2.5">
+              {ismc.organizers.map((o) =>
+                o.logo ? (
+                  <span
+                    key={o.short}
+                    title={o.name}
+                    className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-1.5 shadow-sm ring-1 ring-black/5"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={o.logo} alt={o.name} className="h-full w-full object-contain" />
+                  </span>
+                ) : (
+                  <span key={o.short} title={o.name} className="ismc-display text-lg font-bold tracking-tight text-[var(--p-text)]">
+                    {o.short}
+                  </span>
+                )
+              )}
+            </div>
           </div>
 
           <p
