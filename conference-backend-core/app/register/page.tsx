@@ -1395,8 +1395,9 @@ export default function RegisterPage() {
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Consultant">Consultant</SelectItem>
-                      <SelectItem value="PG/Student">PG/Student</SelectItem>
+                      {conferenceConfig.registration.formFields.designations.map((d) => (
+                        <SelectItem key={d} value={d}>{d}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {touchedFields.designation && !formData.designation && (
