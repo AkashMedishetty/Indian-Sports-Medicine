@@ -30,7 +30,6 @@ export const metadata: Metadata = {
     "sports medicine conference India",
     "sports medicine Hyderabad",
     "Indian Association of Sports Medicine",
-    "TASM",
     "athlete health",
     "sports injury",
     "sports rehabilitation",

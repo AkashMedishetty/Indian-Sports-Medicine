@@ -42,12 +42,6 @@ export const ismc = {
       logo: '/logos/ias.jpeg',
     },
     {
-      name: 'Telangana Association of Sports Medicine',
-      short: 'TASM',
-      scope: 'Telangana',
-      logo: '/logos/tasm.jpeg',
-    },
-    {
       name: 'Telangana Orthopaedic Surgeons Association',
       short: 'TOSA',
       scope: 'Telangana',
