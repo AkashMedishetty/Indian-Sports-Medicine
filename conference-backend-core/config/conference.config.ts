@@ -202,10 +202,10 @@ export interface ConferenceConfig {
  */
 export const conferenceConfig: ConferenceConfig = {
   // Basic Information
-  name: "Telangana Association of Sports Medicine Conference 2026",
-  shortName: "TASMC 2026",
-  registrationPrefix: "TASMC2026",  // Prefix for registration IDs (TASMC2026-001, TASMC2026-002, etc.)
-  organizationName: "Telangana Association of Sports Medicine (TASM)",
+  name: "Indian Association of Sports Medicine Conference 2026",
+  shortName: "IASMCON 2026",
+  registrationPrefix: "IASMCON2026",  // Prefix for registration IDs (IASMCON2026-001, IASMCON2026-002, etc.)
+  organizationName: "Indian Association of Sports Medicine (IASM)",
   tagline: "Uniting Science, Practice & Performance for Stronger Athletes",
   
   // Event Dates
@@ -223,7 +223,7 @@ export const conferenceConfig: ConferenceConfig = {
     state: "Telangana",
     country: "India",
     pincode: "500001",
-    description: "Hyderabad, a hub for sports science and elite healthcare, hosts the Telangana Association of Sports Medicine Conference 2026. The venue offers world-class facilities for clinical sessions, live demonstrations, and hands-on workshops.",
+    description: "Hyderabad, a hub for sports science and elite healthcare, hosts the Indian Association of Sports Medicine Conference 2026. The venue offers world-class facilities for clinical sessions, live demonstrations, and hands-on workshops.",
     facilities: [
       "Main Conference Hall",
       "Multiple Breakout Rooms",
@@ -397,9 +397,9 @@ export const conferenceConfig: ConferenceConfig = {
   
   // Email
   email: {
-    fromName: "Telangana Association of Sports Medicine Conference 2026",
+    fromName: "Indian Association of Sports Medicine Conference 2026",
     replyTo: "noreply@tasm2026.com",
-    footerText: "© 2026 Telangana Association of Sports Medicine Conference — TASM. All rights reserved.",
+    footerText: "© 2026 Indian Association of Sports Medicine Conference — IASM. All rights reserved.",
     logoUrl: "/logos/ismc-logo.png"
   },
 

@@ -636,7 +636,7 @@ export default function RegisterPage() {
           return false
         }
 
-        // HOD Recommendation Form is no longer required for TASMC.
+        // HOD Recommendation Form is no longer required for IASMCON.
 
         console.log('✅ Step 1 validation passed successfully!')
         return true
@@ -1408,7 +1408,7 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* HOD Recommendation Form — removed for TASMC (was PG/Student only) */}
+                {/* HOD Recommendation Form — removed for IASMCON (was PG/Student only) */}
                 {(false as boolean) && (
                   <div className="col-span-full" data-hod-upload>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -1993,7 +1993,7 @@ export default function RegisterPage() {
               </p>
             </div> */}
 
-            {/* Accommodation / Hotel Booking Section — hidden for TASMC (ISSH-only feature) */}
+            {/* Accommodation / Hotel Booking Section — hidden for IASMCON (ISSH-only feature) */}
             <div className="border-t pt-6 hidden">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Hotel Accommodation (Optional)</h3>
@@ -2821,7 +2821,7 @@ export default function RegisterPage() {
     )
   }
 
-  // Registration OPEN for TASMC 2026. (Was `if (!isAdmin)` — the ISSH
+  // Registration OPEN for IASMCON 2026. (Was `if (!isAdmin)` — the ISSH
   // end-of-registration gate that showed every non-admin a "closed" page.
   // Set back to `if (!isAdmin)` to close online registration again.)
   if (false as boolean) {

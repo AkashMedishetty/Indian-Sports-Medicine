@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     console.log('📝 Registration:', JSON.stringify(registration, null, 2))
     console.log('💳 Payment method:', payment?.method)
 
-    // Validate required fields (MCI is optional for TASMC)
+    // Validate required fields (MCI is optional for IASMCON)
     if (!email || !password || !profile?.firstName || !profile?.lastName) {
       console.log('❌ Missing required fields:', {
         email: !!email,

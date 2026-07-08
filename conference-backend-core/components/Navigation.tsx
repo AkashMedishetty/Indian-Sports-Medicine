@@ -59,7 +59,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="ismc-display text-lg font-bold tracking-tight" style={{ color: 'var(--p-text)' }}>
-            TASMC<span style={{ color: 'var(--p-accent)' }}>26</span>
+            IASMCON<span style={{ color: 'var(--p-accent)' }}>26</span>
           </Link>
 
           {/* Desktop Navigation */}

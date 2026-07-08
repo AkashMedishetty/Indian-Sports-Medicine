@@ -13,7 +13,7 @@ export default function AbstractsPage() {
     <ComingSoon
       kicker="Abstracts"
       title={<>Submissions<br />open soon</>}
-      blurb="Abstract submission for TASMC 2026 will open soon. Tracks and guidelines will be announced here — check back, or get in touch to be notified."
+      blurb="Abstract submission for IASMCON 2026 will open soon. Tracks and guidelines will be announced here — check back, or get in touch to be notified."
     />
   );
 }

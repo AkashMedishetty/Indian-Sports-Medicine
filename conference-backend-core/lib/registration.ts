@@ -7,7 +7,7 @@ export interface RegistrationWindows {
 	spotStart: Date
 }
 
-// TASMC 2026 registration windows
+// IASMCON 2026 registration windows
 export const registrationWindows: RegistrationWindows = {
 	earlyBirdEnd: new Date("2026-07-31T23:59:59"),
 	regularStart: new Date("2026-08-01T00:00:00"),
@@ -47,24 +47,24 @@ export interface TierPricing {
 	[category: string]: { amount: number; currency: "INR"; label?: string }
 }
 
-// TASMC tariff (₹). Member = TASM member (consultant/practitioner rate),
+// IASMCON tariff (₹). Member = IASM member (consultant/practitioner rate),
 // Non-Member = consultant/practitioner, Postgraduate = resident/student.
 // faculty/physiotherapist/international are provisional — confirm with client.
 const PRICING_BY_TIER: Record<RegistrationTier, TierPricing> = {
 	"Early Bird": {
-		"iasm-member":  { amount: 3500, currency: "INR", label: "TASM Member" },
+		"iasm-member":  { amount: 3500, currency: "INR", label: "IASM Member" },
 		"non-member":   { amount: 4000, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 3000, currency: "INR", label: "Resident / PG" },
+		"postgraduate": { amount: 3000, currency: "INR", label: "Postgraduate" },
 	},
 	"Regular": {
-		"iasm-member":  { amount: 4000, currency: "INR", label: "TASM Member" },
+		"iasm-member":  { amount: 4000, currency: "INR", label: "IASM Member" },
 		"non-member":   { amount: 4500, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 3500, currency: "INR", label: "Resident / PG" },
+		"postgraduate": { amount: 3500, currency: "INR", label: "Postgraduate" },
 	},
 	"Spot Registration": {
-		"iasm-member":  { amount: 5000, currency: "INR", label: "TASM Member" },
+		"iasm-member":  { amount: 5000, currency: "INR", label: "IASM Member" },
 		"non-member":   { amount: 5000, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 4000, currency: "INR", label: "Resident / PG" },
+		"postgraduate": { amount: 4000, currency: "INR", label: "Postgraduate" },
 	},
 }
 

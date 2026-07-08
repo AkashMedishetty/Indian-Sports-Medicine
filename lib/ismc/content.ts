@@ -8,9 +8,9 @@
 import { conferenceConfig } from '@/config/conference.config';
 
 export const ismc = {
-  name: conferenceConfig.name, // "Telangana Association of Sports Medicine Conference 2026"
-  shortName: conferenceConfig.shortName, // "TASMC 2026"
-  titleLines: ['Telangana', 'Sports', 'Medicine'] as const,
+  name: conferenceConfig.name, // "Indian Association of Sports Medicine Conference 2026"
+  shortName: conferenceConfig.shortName, // "IASMCON 2026"
+  titleLines: ['Indian', 'Sports', 'Medicine'] as const,
   kicker: 'Conference',
   tagline: conferenceConfig.tagline ?? 'Uniting Science, Practice & Performance for Stronger Athletes',
   closing: 'Together, Advancing Sports Health. Elevating Performance.',
@@ -72,7 +72,7 @@ export const ismc = {
   highlights: [
     { stat: '2', label: 'Days of sessions', sub: 'Sep 5–6, 2026' },
     { stat: '+1', label: 'Hands-on workshop', sub: 'Sep 7, 2026' },
-    { stat: 'TASM', label: 'Hosted by', sub: 'Telangana Assoc. of Sports Medicine' },
+    { stat: 'IASM', label: 'Hosted by', sub: 'Indian Assoc. of Sports Medicine' },
     { stat: 'CME', label: 'Accredited learning', sub: 'For the full team' },
   ],
 
@@ -138,7 +138,7 @@ export const ismc = {
     heading: 'Two days that follow the full signal of an athlete.',
     // two-tone paragraph: words flagged `em: true` render solid, the rest muted
     body: [
-      { t: 'The Telangana Association of Sports Medicine Conference unites ', em: false },
+      { t: 'The Indian Association of Sports Medicine Conference unites ', em: false },
       { t: 'science, practice and performance', em: true },
       { t: ' — from the evidence in the lab to the moment an athlete ', em: false },
       { t: 'returns to play', em: true },
@@ -148,12 +148,12 @@ export const ismc = {
 
   // Committee (TODO: add photos + remaining office bearers)
   committee: [
-    { name: 'Dr. Nithin Bejjanki', role: 'Conference President', org: 'TASM', photo: '/ismc/committee/president.jpg' },
-    { name: 'Dr. Sunil Apsingi', role: 'Organising Secretary', org: 'TASM', photo: '/ismc/committee/sunil.jpg' },
-    { name: 'Dr. Sukesh', role: 'Organising Secretary', org: 'TASM', photo: '/ismc/committee/sukesh.jpg' },
-    { name: 'To be announced', role: 'Scientific Chair', org: 'TASM', photo: '/ismc/committee/scientific.jpg' },
-    { name: 'To be announced', role: 'Treasurer', org: 'TASM', photo: '/ismc/committee/treasurer.jpg' },
-    { name: 'To be announced', role: 'Joint Secretary', org: 'TASM', photo: '/ismc/committee/joint.jpg' },
+    { name: 'Dr. Nithin Bejjanki', role: 'Conference President', org: 'IASM', photo: '/ismc/committee/president.jpg' },
+    { name: 'Dr. Sunil Apsingi', role: 'Organising Secretary', org: 'IASM', photo: '/ismc/committee/sunil.jpg' },
+    { name: 'Dr. Sukesh', role: 'Organising Secretary', org: 'IASM', photo: '/ismc/committee/sukesh.jpg' },
+    { name: 'To be announced', role: 'Scientific Chair', org: 'IASM', photo: '/ismc/committee/scientific.jpg' },
+    { name: 'To be announced', role: 'Treasurer', org: 'IASM', photo: '/ismc/committee/treasurer.jpg' },
+    { name: 'To be announced', role: 'Joint Secretary', org: 'IASM', photo: '/ismc/committee/joint.jpg' },
   ],
 
   // Venue & host city (Hyderabad)
@@ -184,9 +184,9 @@ export const ismc = {
 
   // Brochures (downloads) — placeholder PDFs in /public/brochures
   brochures: [
-    { title: 'Conference Brochure', desc: 'Overview, themes and key dates.', file: '/brochures/tasmc-2026-brochure.pdf', kind: 'PDF' },
-    { title: 'Scientific Programme', desc: 'Full two-day agenda and workshop.', file: '/brochures/tasmc-2026-programme.pdf', kind: 'PDF' },
-    { title: 'Registration Form', desc: 'Offline registration & categories.', file: '/brochures/tasmc-2026-registration.pdf', kind: 'PDF' },
+    { title: 'Conference Brochure', desc: 'Overview, themes and key dates.', file: '/brochures/iasmcon-2026-brochure.pdf', kind: 'PDF' },
+    { title: 'Scientific Programme', desc: 'Full two-day agenda and workshop.', file: '/brochures/iasmcon-2026-programme.pdf', kind: 'PDF' },
+    { title: 'Registration Form', desc: 'Offline registration & categories.', file: '/brochures/iasmcon-2026-registration.pdf', kind: 'PDF' },
   ],
 } as const;
 

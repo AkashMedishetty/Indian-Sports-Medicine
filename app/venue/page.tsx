@@ -16,7 +16,7 @@ export default function VenuePage() {
         <div className="p-hero-mesh pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-5 pb-8 pt-20 sm:pt-28 lg:px-10">
           <p className="p-fade-up ismc-mono mb-6 text-[11px] uppercase tracking-[0.3em] text-[var(--p-accent-deep)]">
-            TASMC 2026 · {ismc.dates.mainShort}
+            IASMCON 2026 · {ismc.dates.mainShort}
           </p>
           <h1
             className="p-fade-up ismc-display text-4xl font-semibold leading-[1.03] tracking-[-0.025em] text-[var(--p-text)] sm:text-6xl"

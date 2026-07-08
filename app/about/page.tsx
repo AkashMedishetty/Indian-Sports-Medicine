@@ -16,7 +16,7 @@ export default function AboutPage() {
         <div className="p-hero-mesh pointer-events-none absolute inset-0" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-20 sm:pt-28 lg:px-10">
           <p className="p-fade-up ismc-mono mb-6 text-[11px] uppercase tracking-[0.3em] text-[var(--p-accent-deep)]">
-            Telangana Association of Sports Medicine · Hyderabad 2026
+            Indian Association of Sports Medicine · Hyderabad 2026
           </p>
           <h1
             className="p-fade-up ismc-display max-w-4xl text-4xl font-semibold leading-[1.03] tracking-[-0.025em] text-[var(--p-text)] sm:text-6xl"
