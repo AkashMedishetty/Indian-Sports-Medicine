@@ -142,12 +142,9 @@ export const ismc = {
 
   // Committee (TODO: add photos + remaining office bearers)
   committee: [
-    { name: 'Dr. Nithin Bejjanki', role: 'Conference President', org: 'IASM', photo: '/ismc/committee/president.jpg' },
-    { name: 'Dr. Sunil Apsingi', role: 'Organising Secretary', org: 'IASM', photo: '/ismc/committee/sunil.jpg' },
-    { name: 'Dr. Sukesh', role: 'Organising Secretary', org: 'IASM', photo: '/ismc/committee/sukesh.jpg' },
-    { name: 'To be announced', role: 'Scientific Chair', org: 'IASM', photo: '/ismc/committee/scientific.jpg' },
-    { name: 'To be announced', role: 'Treasurer', org: 'IASM', photo: '/ismc/committee/treasurer.jpg' },
-    { name: 'To be announced', role: 'Joint Secretary', org: 'IASM', photo: '/ismc/committee/joint.jpg' },
+    { name: 'Dr. Nithin Bejjanki', role: 'Conference President', org: 'IASM', photo: '/nithin.jpeg' },
+    { name: 'Dr. Sunil Apsingi', role: 'Organising Secretary', org: 'IASM', photo: '/sunil.jpeg' },
+    { name: 'Dr. Sukesh', role: 'Organising Secretary', org: 'IASM', photo: '/sukesh.jpeg' },
   ],
 
   // Venue & host city (Hyderabad)
@@ -156,7 +153,7 @@ export const ismc = {
     tagline: 'The City of Pearls',
     intro:
       'A hub for sports science and elite healthcare, Hyderabad blends rich heritage with world-class infrastructure — the right stage for a national sports medicine conference.',
-    image: '/ismc/venue/hyderabad.jpg', // TODO: add host-city image
+    image: '/ismc/venue/charminar-wide.jpg', // Charminar (Wikimedia, CC BY-SA 4.0 — swap for an owned image before print)
     facts: [
       { k: 'Venue', v: 'To be announced' },
       { k: 'Dates', v: 'Sep 5–6, 2026' },
