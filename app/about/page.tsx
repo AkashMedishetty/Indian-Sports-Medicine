@@ -30,8 +30,8 @@ export default function AboutPage() {
           >
             <span className="text-[var(--p-text)]">{ismc.name}</span> brings sports physicians,
             surgeons, physiotherapists and scientists together in {ismc.venue.city} on{' '}
-            {ismc.dates.mainShort} — two days of evidence and practice, followed by a hands-on
-            workshop on the 7th.
+            {ismc.dates.mainShort} — two days of evidence and practice, with a pre-conference
+            hands-on workshop on September 4.
           </p>
         </div>
       </header>

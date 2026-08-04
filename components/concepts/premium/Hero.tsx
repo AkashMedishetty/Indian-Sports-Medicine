@@ -61,8 +61,8 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
             style={{ animationDelay: '0.5s' }}
           >
             <span className="text-[var(--p-text)]">A national gathering of sports physicians, surgeons, physiotherapists and scientists.</span>{' '}
-            Two days of evidence and practice in Hyderabad, September 5–6, 2026 — followed by a
-            hands-on workshop on the 7th.
+            Two days of evidence and practice in Hyderabad, September 5–6, 2026 — with a
+            pre-conference hands-on workshop on September 4.
           </p>
 
           {/* quick facts */}
@@ -72,7 +72,7 @@ export function Hero({ subject }: { subject: React.ReactNode }) {
           >
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.dates.mainShort}</span>
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.venue.city}</span>
-            <span><span className="text-[var(--p-accent-deep)]">●</span> Early bird till Jul 31</span>
+            <span><span className="text-[var(--p-accent-deep)]">●</span> Early bird till Aug 15</span>
           </div>
 
           <div className="p-fade-up mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: '0.7s' }}>

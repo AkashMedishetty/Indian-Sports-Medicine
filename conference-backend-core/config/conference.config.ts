@@ -212,7 +212,7 @@ export const conferenceConfig: ConferenceConfig = {
   eventDate: {
     start: "2026-09-05",
     end: "2026-09-06"
-    // Post-conference workshop: 2026-09-07
+    // Pre-conference workshop: 2026-09-04
   },
   
   // Venue
@@ -268,7 +268,7 @@ export const conferenceConfig: ConferenceConfig = {
   // Contact
   contact: {
     email: "contact@tasm2026.com",       // TODO: confirm official email
-    phone: "+91 00000 00000",                         // TODO: confirm phone (Conference Secretary: Dr. Nithin)
+    phone: "+91 79933 13915",                         // Laxmi Prabha (conference coordinator / accommodation)
     website: "https://tasm2026.com",      // TODO: confirm domain
     supportEmail: "support@tasm2026.com",
     abstractsEmail: "abstracts@tasm2026.com"
@@ -348,19 +348,19 @@ export const conferenceConfig: ConferenceConfig = {
       earlyBird: {
         enabled: true,
         startDate: "2026-06-23",
-        endDate: "2026-07-31",
+        endDate: "2026-08-15",
         label: "Early Bird"
       },
       regular: {
         enabled: true,
-        startDate: "2026-08-01",
+        startDate: "2026-08-16",
         endDate: "2026-09-04",
         label: "Regular"
       },
       onsite: {
         enabled: true,
         startDate: "2026-09-05",
-        endDate: "2026-09-07",
+        endDate: "2026-09-06",
         label: "Spot Registration"
       }
     }

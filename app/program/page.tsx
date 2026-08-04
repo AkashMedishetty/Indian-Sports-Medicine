@@ -11,7 +11,7 @@ export default function ProgramPage() {
     <ComingSoon
       kicker="Programme"
       title={<>Schedule<br />coming soon</>}
-      blurb="The full scientific programme for IASMCON 2026 — two days of sessions plus the hands-on workshop on the 7th — is being finalised, and will be published here shortly."
+      blurb="The full scientific programme for IASMCON 2026 — two days of sessions plus the pre-conference hands-on workshop on September 4 — is being finalised, and will be published here shortly."
     />
   );
 }

@@ -6,7 +6,7 @@ import { Button } from "@/conference-backend-core/components/ui/button"
 import { Input } from "@/conference-backend-core/components/ui/input"
 import { Textarea } from "@/conference-backend-core/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/conference-backend-core/components/ui/select"
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, User, Dumbbell } from "lucide-react"
 import { Navigation } from "@/conference-backend-core/components/Navigation"
 import { conferenceConfig } from "@/conference-backend-core/config/conference.config"
 import { SmoothScroll } from "@/components/concepts/premium/SmoothScroll"
@@ -111,6 +111,8 @@ export default function ContactPage() {
   }
 
   const infoItems = [
+    { icon: User, title: 'Conference coordinator', lines: ['Laxmi Prabha', '+91 79933 13915', 'Accommodation & residential packages'] },
+    { icon: Dumbbell, title: 'Workshop bookings', lines: ['+91 9866467677', 'Pre-conference workshop · Sep 4'] },
     {
       icon: MapPin,
       title: 'Venue',

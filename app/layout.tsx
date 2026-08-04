@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: `${conferenceConfig.shortName} - ${conferenceConfig.name}`,
     template: `%s | ${conferenceConfig.shortName}`,
   },
-  description: `${conferenceConfig.name} — ${conferenceConfig.tagline}. ${conferenceConfig.venue.city}, September 5–6, 2026, with a post-conference workshop on September 7. Organized by the Indian Association of Sports Medicine (IASM).`,
+  description: `${conferenceConfig.name} — ${conferenceConfig.tagline}. ${conferenceConfig.venue.city}, September 5–6, 2026, with a pre-conference workshop on September 4. Organized by the Indian Association of Sports Medicine (IASM).`,
   keywords: [
     "IASMCON 2026",
     "IASMCON26",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: `${conferenceConfig.shortName} - ${conferenceConfig.name}`,
-    description: `${conferenceConfig.tagline}. Hyderabad, September 5–6, 2026. Post-conference workshop September 7. Organized by IASM.`,
+    description: `${conferenceConfig.tagline}. Hyderabad, September 5–6, 2026. Pre-conference workshop September 4. Organized by IASM.`,
     url: siteUrl,
     siteName: conferenceConfig.shortName,
     images: [

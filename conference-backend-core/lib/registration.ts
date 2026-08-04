@@ -9,8 +9,8 @@ export interface RegistrationWindows {
 
 // IASMCON 2026 registration windows
 export const registrationWindows: RegistrationWindows = {
-	earlyBirdEnd: new Date("2026-07-31T23:59:59"),
-	regularStart: new Date("2026-08-01T00:00:00"),
+	earlyBirdEnd: new Date("2026-08-15T23:59:59"),
+	regularStart: new Date("2026-08-16T00:00:00"),
 	regularEnd: new Date("2026-09-04T23:59:59"),
 	spotStart: new Date("2026-09-05T00:00:00"),
 }
@@ -31,8 +31,8 @@ export function getTierByDate(date: Date): RegistrationTier {
 }
 
 export const registrationLabels = {
-	earlyBird: "Early Bird upto 31/07/2026",
-	regular: "Regular 01/08/2026–04/09/2026",
+	earlyBird: "Early Bird upto 15/08/2026",
+	regular: "Regular 16/08/2026–04/09/2026",
 	spot: "Spot at the Conference",
 }
 

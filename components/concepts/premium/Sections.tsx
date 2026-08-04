@@ -430,7 +430,7 @@ export function Fees() {
             <Overline>Registration fees</Overline>
             <h2 className="ismc-display text-4xl font-semibold tracking-[-0.02em] text-[var(--p-text)] sm:text-5xl">Fees &amp; registration</h2>
           </div>
-          <p className="ismc-body max-w-xs text-sm text-[var(--p-text-muted)]">In Indian Rupees (₹). Early-bird rates apply until {ismc.fees.earlyBirdUntil}.</p>
+          <p className="ismc-body max-w-xs text-sm text-[var(--p-text-muted)]">In Indian Rupees (₹), exclusive of 18% GST. Early-bird rates apply until {ismc.fees.earlyBirdUntil}.</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">

@@ -18,7 +18,7 @@ export const ismc = {
   dates: {
     main: '5 & 6 September 2026',
     mainShort: 'Sep 5–6, 2026',
-    workshop: '7 September 2026',
+    workshop: '4 September 2026',
     iso: { start: '2026-09-05T09:00:00+05:30', end: '2026-09-06T18:00:00+05:30' },
   },
 
@@ -65,7 +65,7 @@ export const ismc = {
   // Highlights for the "why attend" rail.
   highlights: [
     { stat: '2', label: 'Days of sessions', sub: 'Sep 5–6, 2026' },
-    { stat: '+1', label: 'Hands-on workshop', sub: 'Sep 7, 2026' },
+    { stat: '+1', label: 'Hands-on workshop', sub: 'Sep 4, 2026' },
     { stat: 'IASM', label: 'Hosted by', sub: 'Indian Assoc. of Sports Medicine' },
     { stat: 'CME', label: 'Accredited learning', sub: 'For the full team' },
   ],
@@ -73,21 +73,21 @@ export const ismc = {
   // Registration fees (₹, INR) — from the confirmed tariff
   fees: {
     currency: '₹',
-    earlyBirdUntil: 'Jul 31, 2026',
+    earlyBirdUntil: 'Aug 15, 2026',
     tiers: [
       {
         category: 'Consultants / Practitioners',
         rows: [
-          { period: 'Early bird', sub: 'till Jul 31, 2026', member: 3500, nonMember: 4000 },
-          { period: 'Standard', sub: 'Aug 1 – Sep 4', member: 4000, nonMember: 4500 },
+          { period: 'Early bird', sub: 'till Aug 15, 2026', member: 3500, nonMember: 4000 },
+          { period: 'Standard', sub: 'Aug 16 – Sep 4', member: 4000, nonMember: 4500 },
         ],
         spot: 5000,
       },
       {
         category: 'Residents / Students',
         rows: [
-          { period: 'Early bird', sub: 'till Jul 31, 2026', member: 3000, nonMember: 3000 },
-          { period: 'Standard', sub: 'Aug 1 – Sep 4', member: 3500, nonMember: 3500 },
+          { period: 'Early bird', sub: 'till Aug 15, 2026', member: 3000, nonMember: 3000 },
+          { period: 'Standard', sub: 'Aug 16 – Sep 4', member: 3500, nonMember: 3500 },
         ],
         spot: 4000,
       },
@@ -136,7 +136,7 @@ export const ismc = {
       { t: 'science, practice and performance', em: true },
       { t: ' — from the evidence in the lab to the moment an athlete ', em: false },
       { t: 'returns to play', em: true },
-      { t: '. Two days of sessions on September 5–6, then a hands-on workshop on the 7th.', em: false },
+      { t: '. A pre-conference hands-on workshop on September 4, then two days of sessions on September 5–6.', em: false },
     ],
   },
 
@@ -157,7 +157,7 @@ export const ismc = {
     facts: [
       { k: 'Venue', v: 'To be announced' },
       { k: 'Dates', v: 'Sep 5–6, 2026' },
-      { k: 'Workshop', v: 'Sep 7, 2026' },
+      { k: 'Workshop', v: 'Sep 4, 2026' },
     ],
     highlights: [
       { title: 'Sports Medicine Excellence', desc: 'Leading rehabilitation institutes and elite orthopaedic & physiotherapy centres.' },

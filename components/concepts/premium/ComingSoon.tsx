@@ -75,7 +75,7 @@ export function ComingSoon({
           >
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.dates.mainShort}</span>
             <span><span className="text-[var(--p-accent-deep)]">●</span> {ismc.venue.city}</span>
-            <span><span className="text-[var(--p-accent-deep)]">●</span> Workshop Sep 7</span>
+            <span><span className="text-[var(--p-accent-deep)]">●</span> Workshop Sep 4</span>
           </div>
 
           <div className="p-fade-up mt-10 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: '0.32s' }}>
