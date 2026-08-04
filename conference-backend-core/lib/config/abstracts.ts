@@ -96,9 +96,8 @@ export const defaultAbstractsSettings: AbstractsSettings = {
     { key: 'neurology', label: 'Neurology', enabled: true }
   ],
   submissionCategories: [
-    { key: 'award-paper', label: 'Award Paper', enabled: true },
     { key: 'free-paper', label: 'Free Paper', enabled: true },
-    { key: 'poster-presentation', label: 'Poster Presentation', enabled: true }
+    { key: 'poster-presentation', label: 'Poster', enabled: true }
   ],
   topicsBySpecialty: {
     neurosurgery: [
@@ -125,18 +124,18 @@ export const defaultAbstractsSettings: AbstractsSettings = {
   // Legacy fields (kept for backward compatibility)
   tracks: [
     { key: 'free-paper', label: 'Free Paper', enabled: true },
-    { key: 'poster', label: 'Poster Presentation', enabled: true }
+    { key: 'poster-presentation', label: 'Poster', enabled: true }
   ],
   topics: [], // Legacy - use topicsBySpecialty instead
   submissionWindow: {
-    start: new Date().toISOString(),
-    end: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days from now
-    enabled: false // Disabled by default - enable in admin panel
+    start: '2026-06-23T00:00:00+05:30',
+    end: '2026-08-15T23:59:59+05:30',
+    enabled: true
   },
   // Sponsor-managed abstracts - disabled by default
   enableAbstractsWithoutRegistration: false,
   guidelines: {
-    general: 'Submit your research abstracts for Award Paper, Free Paper, and Poster Presentation at ISSH Midterm CME 2026.',
+    general: 'Submit your research abstracts for Free Paper or Poster presentation at IASMCON 2026.',
     freePaper: {
       enabled: true,
       title: 'Free Paper Presentation',

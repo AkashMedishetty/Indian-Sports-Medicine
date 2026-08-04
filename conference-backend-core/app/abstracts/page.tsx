@@ -19,14 +19,19 @@ import { conferenceConfig } from "../../config/conference.config"
 import { upload } from "@vercel/blob/client"
 
 // Constants
+// Presentation type (submissionCategory). Keys must stay within the API's valid
+// set ['award-paper','free-paper','poster-presentation','e-poster']; we expose
+// Free Paper + Poster (poster-presentation, relabelled "Poster").
 const SUBMISSION_CATEGORY_OPTIONS = [
-  { value: 'award-paper', label: 'Award Paper' },
   { value: 'free-paper', label: 'Free Paper' },
-  { value: 'poster-presentation', label: 'E-Poster' }
+  { value: 'poster-presentation', label: 'Poster' }
 ]
 
+// Abstract discipline category — the six conference registration categories.
+const ABSTRACT_CATEGORIES = conferenceConfig.registration.formFields.designations
+
 const TITLES = ['Dr.', 'Prof.', 'Mr.', 'Mrs.', 'Ms.']
-const DESIGNATIONS = ['Consultant', 'PG/Student']
+const DESIGNATIONS = conferenceConfig.registration.formFields.designations
 
 type FlowType = 'none' | 'registered' | 'unregistered' | 'final-submission'
 
@@ -144,6 +149,7 @@ interface RegisteredFormProps {
 const RegisteredAbstractForm = memo(function RegisteredAbstractForm({ session, onClose, onSuccess, abstractsConfig }: RegisteredFormProps) {
   const [formData, setFormData] = useState({
     submissionCategory: "",
+    category: "",
     title: "",
     authors: "",
     abstract: "",
@@ -178,7 +184,11 @@ const RegisteredAbstractForm = memo(function RegisteredAbstractForm({ session, o
     e.preventDefault()
     
     if (!formData.submissionCategory) {
-      toast.error('Please select a submission category')
+      toast.error('Please select a presentation type')
+      return
+    }
+    if (!formData.category) {
+      toast.error('Please select a category')
       return
     }
     if (!formData.title.trim() || !formData.authors.trim()) {
@@ -242,15 +252,25 @@ const RegisteredAbstractForm = memo(function RegisteredAbstractForm({ session, o
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label>Submission Category <span className="text-red-500">*</span></Label>
+              <Label>Presentation Type <span className="text-red-500">*</span></Label>
               <Select value={formData.submissionCategory} onValueChange={(v) => setFormData(prev => ({ ...prev, submissionCategory: v }))}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="Select presentation type" /></SelectTrigger>
                 <SelectContent>
                   {submissionCategoryOptions.map((opt: any) => <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-            
+
+            <div>
+              <Label>Category <span className="text-red-500">*</span></Label>
+              <Select value={formData.category} onValueChange={(v) => setFormData(prev => ({ ...prev, category: v }))}>
+                <SelectTrigger className="mt-1"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent>
+                  {ABSTRACT_CATEGORIES.map((c: string) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <Label>Abstract Title <span className="text-red-500">*</span></Label>
               <Input placeholder="Enter your abstract title" value={formData.title} onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))} className="mt-1" />
@@ -1139,7 +1159,7 @@ export default function AbstractsPage() {
                 </motion.div>
                 
                 <p className="text-lg md:text-xl max-w-3xl mx-auto">
-                  Submit your research abstracts for Award Paper, Free Paper, and Poster Presentation
+                  Submit your research abstracts for Free Paper or Poster presentation
                   <br /><span className="text-blue-200">at {conferenceConfig.shortName}, {conferenceConfig.venue.city}</span>
                 </p>
               </div>
@@ -1153,11 +1173,13 @@ export default function AbstractsPage() {
                     </Button>
                   </motion.div>
 
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button onClick={() => { if (session) { setActiveFlow('final-submission'); setIsAuthenticated(true) } else { setActiveFlow('final-submission'); setShowLoginModal(true) } }} className="px-8 py-6 text-lg bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-2xl font-bold">
-                      <Upload className="w-5 h-5 mr-2" />Submit Final Presentation
-                    </Button>
-                  </motion.div>
+                  {abstractsConfig?.isFinalSubmissionOpen && (
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button onClick={() => { if (session) { setActiveFlow('final-submission'); setIsAuthenticated(true) } else { setActiveFlow('final-submission'); setShowLoginModal(true) } }} className="px-8 py-6 text-lg bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-2xl font-bold">
+                        <Upload className="w-5 h-5 mr-2" />Submit Final Presentation
+                      </Button>
+                    </motion.div>
+                  )}
 
                   {!session && abstractsConfig?.enableAbstractsWithoutRegistration && (
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -1169,8 +1191,8 @@ export default function AbstractsPage() {
                 </motion.div>
               )}
 
-              {/* Show final submission button even when submissions are closed */}
-              {submissionsDisabled && activeFlow === 'none' && (
+              {/* Final submission button when abstract submissions are closed — only once final submission is enabled */}
+              {submissionsDisabled && activeFlow === 'none' && abstractsConfig?.isFinalSubmissionOpen && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-8">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button onClick={() => { if (session) { setActiveFlow('final-submission'); setIsAuthenticated(true) } else { setActiveFlow('final-submission'); setShowLoginModal(true) } }} className="px-8 py-6 text-lg bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-2xl font-bold">
@@ -1316,26 +1338,9 @@ export default function AbstractsPage() {
                 </motion.div>
 
                 {/* Categories - from config guidelines */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                  {/* Award Paper */}
-                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-                    <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200 dark:border-yellow-800 shadow-lg h-full">
-                      <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-lg text-yellow-800 dark:text-yellow-200"><Award className="w-6 h-6 text-yellow-500" />Award Paper</CardTitle></CardHeader>
-                      <CardContent>
-                        <ul className="text-sm text-yellow-900/80 dark:text-yellow-100/80 space-y-2">
-                          {(abstractsConfig?.guidelines?.freePaper?.requirements?.length > 0
-                            ? abstractsConfig.guidelines.freePaper.requirements.slice(0, 4)
-                            : ['Original, unpublished work only', 'Abstract must follow guidelines', 'Upload as Word document (.doc/.docx)']
-                          ).map((item: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />{item}</li>
-                          ))}
-                        </ul>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {/* Free Paper */}
-                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
                     <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 shadow-lg h-full">
                       <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-lg text-blue-800 dark:text-blue-200"><FileText className="w-6 h-6 text-blue-500" />Free Paper</CardTitle></CardHeader>
                       <CardContent>
@@ -1351,15 +1356,15 @@ export default function AbstractsPage() {
                     </Card>
                   </motion.div>
 
-                  {/* E-Poster */}
-                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
+                  {/* Poster */}
+                  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
                     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800 shadow-lg h-full">
-                      <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-lg text-purple-800 dark:text-purple-200"><Calendar className="w-6 h-6 text-purple-500" />E-Poster</CardTitle></CardHeader>
+                      <CardHeader className="pb-2"><CardTitle className="flex items-center gap-2 text-lg text-purple-800 dark:text-purple-200"><FileText className="w-6 h-6 text-purple-500" />Poster</CardTitle></CardHeader>
                       <CardContent>
                         <ul className="text-sm text-purple-900/80 dark:text-purple-100/80 space-y-2">
                           {(abstractsConfig?.guidelines?.poster?.requirements?.length > 0
                             ? abstractsConfig.guidelines.poster.requirements.slice(0, 4)
-                            : ['E-poster displayed on LCD screen', 'Follow poster format guidelines', 'Upload as Word document (.doc/.docx)']
+                            : ['Original, unpublished research', 'Follow poster format guidelines', 'Upload as Word document (.doc/.docx)']
                           ).map((item: string, i: number) => (
                             <li key={i} className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />{item}</li>
                           ))}

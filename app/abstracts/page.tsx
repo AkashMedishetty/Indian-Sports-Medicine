@@ -1,19 +1,9 @@
-'use client';
+// Abstract submission is live — this re-exports the backend abstracts flow at
+// conference-backend-core/app/abstracts/page.tsx.
+// To show a "coming soon" placeholder again, restore:
+//   'use client'
+//   import { ComingSoon } from '@/components/concepts/premium/ComingSoon'
+//   export default function AbstractsPage() { return <ComingSoon kicker="Abstracts" ... /> }
+import AbstractsPage from '@/conference-backend-core/app/abstracts/page'
 
-// Abstract submission isn't open yet — this route shows a premium "opens soon"
-// page. The backend abstracts flow is untouched at
-// conference-backend-core/app/abstracts/page.tsx. To re-enable it, restore:
-//   import AbstractsPage from '@/conference-backend-core/app/abstracts/page'
-//   export default AbstractsPage
-
-import { ComingSoon } from '@/components/concepts/premium/ComingSoon';
-
-export default function AbstractsPage() {
-  return (
-    <ComingSoon
-      kicker="Abstracts"
-      title={<>Submissions<br />open soon</>}
-      blurb="Abstract submission for IASMCON 2026 will open soon. Tracks and guidelines will be announced here — check back, or get in touch to be notified."
-    />
-  );
-}
+export default AbstractsPage

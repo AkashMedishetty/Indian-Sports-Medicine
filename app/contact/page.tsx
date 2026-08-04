@@ -6,7 +6,7 @@ import { Button } from "@/conference-backend-core/components/ui/button"
 import { Input } from "@/conference-backend-core/components/ui/input"
 import { Textarea } from "@/conference-backend-core/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/conference-backend-core/components/ui/select"
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, User, Dumbbell } from "lucide-react"
+import { MapPin, Mail, Clock, Send, CheckCircle, User, Dumbbell } from "lucide-react"
 import { Navigation } from "@/conference-backend-core/components/Navigation"
 import { conferenceConfig } from "@/conference-backend-core/config/conference.config"
 import { SmoothScroll } from "@/components/concepts/premium/SmoothScroll"
@@ -118,7 +118,6 @@ export default function ContactPage() {
       title: 'Venue',
       lines: [conferenceConfig.venue.name, `${conferenceConfig.venue.city}, ${conferenceConfig.venue.state}`, conferenceConfig.venue.country],
     },
-    { icon: Phone, title: 'Phone', lines: [conferenceConfig.contact.phone] },
     {
       icon: Mail,
       title: 'Email',

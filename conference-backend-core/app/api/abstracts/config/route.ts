@@ -32,10 +32,6 @@ export async function GET(request: NextRequest) {
     const submissionStart = settings.submissionWindow?.start || abstractsConfig?.submissionOpenDate
     const submissionEnd = settings.submissionWindow?.end || abstractsConfig?.submissionCloseDate
     
-    // Override: extend abstract submission deadline to April 7, 2026 at midnight IST
-    // IST is UTC+5:30, so midnight IST = 18:30 UTC previous day
-    const ABSTRACT_DEADLINE_OVERRIDE = '2026-04-07T18:29:59Z'
-    
     // Also check enableAbstractsWithoutRegistration from both sources
     const enableAbstractsWithoutRegistration = settings.enableAbstractsWithoutRegistration || abstractsConfig?.enableAbstractsWithoutRegistration || false
     
@@ -46,7 +42,7 @@ export async function GET(request: NextRequest) {
     
     if (submissionWindowEnabled && submissionStart && submissionEnd) {
       const startDate = new Date(submissionStart)
-      const endDate = new Date(ABSTRACT_DEADLINE_OVERRIDE)
+      const endDate = new Date(submissionEnd)
       isOpen = now <= endDate && now >= startDate
       daysRemaining = isOpen ? Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 0
     } else if (submissionWindowEnabled) {
@@ -62,7 +58,7 @@ export async function GET(request: NextRequest) {
       isFinalSubmissionOpen = now >= finalStart && now <= finalEnd
     }
     
-    const effectiveEnd = ABSTRACT_DEADLINE_OVERRIDE
+    const effectiveEnd = submissionEnd || settings.submissionWindow?.end
     
     return NextResponse.json({ 
       success: true, 

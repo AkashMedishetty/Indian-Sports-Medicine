@@ -379,9 +379,7 @@ export const conferenceConfig: ConferenceConfig = {
 
     tracks: [
       { key: "free-paper", label: "Free Paper", enabled: true },
-      { key: "poster", label: "Poster", enabled: true },
-      { key: "e-poster", label: "E-Poster", enabled: true },
-      { key: "award-paper", label: "Award Paper", enabled: true }
+      { key: "poster-presentation", label: "Poster", enabled: true }
     ],
     
     allowedInitialFileTypes: [

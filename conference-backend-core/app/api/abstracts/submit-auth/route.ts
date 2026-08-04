@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
 
     const {
       submissionCategory,
+      category,
       title,
       authors: authorsStr,
       abstract: abstractContent,
@@ -176,6 +177,7 @@ export async function POST(request: NextRequest) {
       userId: user._id,
       registrationId: user.registration.registrationId,
       submissionCategory: normalizedCategory,
+      category: category || undefined,
       track: getSubmissionCategoryLabel(normalizedCategory),
       title,
       authors,
