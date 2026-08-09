@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
             <ul>
               <li><strong>Event:</strong> ISSH Midterm CME 2026</li>
               <li><strong>Date:</strong> April 25-26, 2026</li>
-              <li><strong>Venue:</strong> HICC Novotel, Hyderabad</li>
+              <li><strong>Venue:</strong> Trident Hotel, Hyderabad</li>
             </ul>
             <p>We look forward to seeing you at the conference!</p>
             <p>Best regards,<br/>ISSH 2026 Team</p>

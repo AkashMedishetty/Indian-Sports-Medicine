@@ -165,7 +165,7 @@ function generateICSLink(session: FacultySession, name: string): string {
   const endStr = fmt(dateStr, endUTC.h, endUTC.m)
   
   const title = encodeURIComponent(`${session.topic === 'Chairperson' || session.topic === 'Chaiperson' ? '🪑 Chairperson' : '🎤 Speaker'} — ${session.session.substring(0, 60)}`)
-  const location = encodeURIComponent(`${session.hall}, HICC Novotel, Hyderabad`)
+  const location = encodeURIComponent(`${session.hall}, Trident Hotel, Hyderabad`)
   const details = encodeURIComponent(`${session.topic}\n\nSession: ${session.session}\nHall: ${session.hall}`)
   
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&location=${location}&details=${details}`

@@ -217,8 +217,8 @@ export const conferenceConfig: ConferenceConfig = {
   
   // Venue
   venue: {
-    name: "Venue to be announced",  // TODO: confirm exact venue
-    address: "Hyderabad",
+    name: "Trident Hotel, Hyderabad",
+    address: "Trident Hotel, Hyderabad",
     city: "Hyderabad",
     state: "Telangana",
     country: "India",

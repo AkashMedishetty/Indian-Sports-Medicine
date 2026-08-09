@@ -1993,13 +1993,13 @@ export default function RegisterPage() {
               </p>
             </div> */}
 
-            {/* Accommodation / Hotel Booking Section — hidden for IASMCON (ISSH-only feature) */}
-            <div className="border-t pt-6 hidden">
+            {/* Accommodation / Hotel Booking Section — Trident Hotel, Hyderabad */}
+            <div className="border-t pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Hotel Accommodation (Optional)</h3>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                Book your stay at Novotel HICC, Hyderabad. Check-in: 2:00 PM | Check-out: 12:00 PM. Prices are exclusive of 18% GST.
+                Book your stay at Trident Hotel, Hyderabad. Check-in: 2:00 PM | Check-out: 12:00 PM. Room rates are exclusive of applicable taxes.
               </p>
 
               <div className="flex items-center gap-3 mb-4">
@@ -2018,7 +2018,7 @@ export default function RegisterPage() {
                   {/* Room Type Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Room Type *</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div
                         className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                           formData.accommodationRoomType === 'single'
@@ -2029,10 +2029,25 @@ export default function RegisterPage() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <input type="radio" checked={formData.accommodationRoomType === 'single'} readOnly className="text-blue-600" />
-                          <span className="font-semibold text-gray-800 dark:text-gray-200">Single Room</span>
+                          <span className="font-semibold text-gray-800 dark:text-gray-200">Single Occupancy</span>
                         </div>
-                        <p className="text-lg font-bold text-blue-600">₹10,000 <span className="text-xs font-normal text-gray-500">/ night</span></p>
-                        <p className="text-xs text-gray-500">+ 18% GST</p>
+                        <p className="text-lg font-bold text-blue-600">₹10,500 <span className="text-xs font-normal text-gray-500">/ night</span></p>
+                        <p className="text-xs text-gray-500">+ taxes</p>
+                      </div>
+                      <div
+                        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                          formData.accommodationRoomType === 'double'
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
+                        }`}
+                        onClick={() => handleInputChange("accommodationRoomType", "double")}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <input type="radio" checked={formData.accommodationRoomType === 'double'} readOnly className="text-blue-600" />
+                          <span className="font-semibold text-gray-800 dark:text-gray-200">Double Occupancy</span>
+                        </div>
+                        <p className="text-lg font-bold text-blue-600">₹11,500 <span className="text-xs font-normal text-gray-500">/ night</span></p>
+                        <p className="text-xs text-gray-500">+ taxes</p>
                       </div>
                       <div
                         className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -2044,10 +2059,10 @@ export default function RegisterPage() {
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <input type="radio" checked={formData.accommodationRoomType === 'sharing'} readOnly className="text-blue-600" />
-                          <span className="font-semibold text-gray-800 dark:text-gray-200">Sharing Room</span>
+                          <span className="font-semibold text-gray-800 dark:text-gray-200">Sharing</span>
                         </div>
-                        <p className="text-lg font-bold text-blue-600">₹7,500 <span className="text-xs font-normal text-gray-500">/ night</span></p>
-                        <p className="text-xs text-gray-500">+ 18% GST</p>
+                        <p className="text-lg font-bold text-blue-600">₹5,750 <span className="text-xs font-normal text-gray-500">/ night</span></p>
+                        <p className="text-xs text-gray-500">per person · + taxes</p>
                       </div>
                     </div>
                   </div>
@@ -2060,8 +2075,8 @@ export default function RegisterPage() {
                         type="date"
                         value={formData.accommodationCheckIn}
                         onChange={(e) => handleInputChange("accommodationCheckIn", e.target.value)}
-                        min="2026-04-23"
-                        max="2026-04-26"
+                        min="2026-09-04"
+                        max="2026-09-06"
                         className="dark:bg-gray-800 dark:border-gray-600"
                       />
                     </div>
@@ -2071,8 +2086,8 @@ export default function RegisterPage() {
                         type="date"
                         value={formData.accommodationCheckOut}
                         onChange={(e) => handleInputChange("accommodationCheckOut", e.target.value)}
-                        min={formData.accommodationCheckIn || "2026-04-24"}
-                        max="2026-04-27"
+                        min={formData.accommodationCheckIn || "2026-09-05"}
+                        max="2026-09-07"
                         className="dark:bg-gray-800 dark:border-gray-600"
                       />
                     </div>
@@ -2084,17 +2099,19 @@ export default function RegisterPage() {
                       const checkIn = new Date(formData.accommodationCheckIn);
                       const checkOut = new Date(formData.accommodationCheckOut);
                       const nights = Math.max(0, Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)));
-                      const perNight = formData.accommodationRoomType === 'single' ? 10000 : 7500;
+                      const rates: Record<string, number> = { single: 10500, double: 11500, sharing: 5750 };
+                      const labels: Record<string, string> = { single: 'Single occupancy', double: 'Double occupancy', sharing: 'Sharing (per person)' };
+                      const perNight = rates[formData.accommodationRoomType] || 0;
                       const total = nights * perNight;
                       return nights > 0 ? (
                         <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-700">
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-600 dark:text-gray-400">
-                              {formData.accommodationRoomType === 'single' ? 'Single' : 'Sharing'} × {nights} night{nights > 1 ? 's' : ''}
+                              {labels[formData.accommodationRoomType] || 'Room'} × {nights} night{nights > 1 ? 's' : ''}
                             </span>
                             <span className="font-semibold text-gray-800 dark:text-gray-200">₹{total.toLocaleString('en-IN')}</span>
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">+ 18% GST will be added to the total bill</p>
+                          <p className="text-xs text-gray-500 mt-1">+ applicable taxes will be added to the total bill</p>
                         </div>
                       ) : null;
                     })()

@@ -28,8 +28,8 @@ export default function VenuePage() {
             className="p-fade-up ismc-body mt-6 max-w-2xl text-lg leading-relaxed text-[var(--p-text-muted)]"
             style={{ animationDelay: '0.16s' }}
           >
-            The {ismc.name} convenes in {ismc.venue.city} on {ismc.dates.mainShort} — the exact
-            venue will be announced soon. Meet the city that hosts it.
+            The {ismc.name} convenes at Trident Hotel, {ismc.venue.city}, on {ismc.dates.mainShort}.
+            Meet the city that hosts it.
           </p>
         </div>
       </header>

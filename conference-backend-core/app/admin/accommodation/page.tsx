@@ -112,7 +112,7 @@ export default function AdminAccommodationPage() {
               <div>
                 <h1 className="text-3xl font-bold">Hotel Accommodation</h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  Manage hotel bookings at Novotel HICC, Hyderabad
+                  Manage hotel bookings at Trident Hotel, Hyderabad
                 </p>
               </div>
               <div className="flex items-center gap-2">

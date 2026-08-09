@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       const checkIn = new Date(accommodationCheckIn)
       const checkOut = new Date(accommodationCheckOut)
       const nights = Math.max(0, Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)))
-      const perNight = accommodationRoomType === 'single' ? 10000 : 7500
+      const perNight = ({ single: 10500, double: 11500, sharing: 5750 } as Record<string, number>)[accommodationRoomType] ?? 0
       accommodationCharge = nights * perNight
       accommodationData = {
         required: true,

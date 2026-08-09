@@ -569,7 +569,7 @@ export default function FacultyRegisterPage() {
                     {/* Hotel Accommodation */}
                     <div className="space-y-4">
                       <h3 className="font-semibold text-gray-800 dark:text-white border-b pb-2">Hotel Accommodation (Optional)</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Book your stay at Novotel HICC, Hyderabad. Check-in: 2:00 PM | Check-out: 12:00 PM. Prices are exclusive of 18% GST.</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Book your stay at Trident Hotel, Hyderabad. Check-in: 2:00 PM | Check-out: 12:00 PM. Room rates are exclusive of applicable taxes.</p>
                       <div className="flex items-center gap-3">
                         <Checkbox id="accommodationRequired" checked={formData.accommodationRequired} onCheckedChange={(checked) => updateField("accommodationRequired", !!checked)} />
                         <label htmlFor="accommodationRequired" className="text-sm font-medium cursor-pointer">I need hotel accommodation</label>
@@ -578,30 +578,34 @@ export default function FacultyRegisterPage() {
                         <div className="space-y-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                           <div>
                             <Label>Room Type *</Label>
-                            <div className="grid grid-cols-2 gap-3 mt-2">
-                              {(['single', 'sharing'] as const).map(type => (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                              {(['single', 'double', 'sharing'] as const).map(type => {
+                                const rates = { single: 10500, double: 11500, sharing: 5750 } as const
+                                const names = { single: 'Single Occupancy', double: 'Double Occupancy', sharing: 'Sharing' } as const
+                                return (
                                 <div key={type} className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${formData.accommodationRoomType === type ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'}`} onClick={() => updateField("accommodationRoomType", type)}>
                                   <div className="flex items-center gap-2 mb-1">
                                     <input type="radio" checked={formData.accommodationRoomType === type} readOnly className="text-blue-600" />
-                                    <span className="font-semibold text-gray-800 dark:text-gray-200">{type === 'single' ? 'Single Room' : 'Sharing Room'}</span>
+                                    <span className="font-semibold text-gray-800 dark:text-gray-200">{names[type]}</span>
                                   </div>
-                                  <p className="text-lg font-bold text-blue-600">₹{type === 'single' ? '10,000' : '7,500'} <span className="text-xs font-normal text-gray-500">/ night</span></p>
-                                  <p className="text-xs text-gray-500">+ 18% GST</p>
+                                  <p className="text-lg font-bold text-blue-600">₹{rates[type].toLocaleString('en-IN')} <span className="text-xs font-normal text-gray-500">/ night</span></p>
+                                  <p className="text-xs text-gray-500">{type === 'sharing' ? 'per person · + taxes' : '+ taxes'}</p>
                                 </div>
-                              ))}
+                                )
+                              })}
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div><Label>Check-in Date *</Label><Input type="date" value={formData.accommodationCheckIn} onChange={(e) => updateField("accommodationCheckIn", e.target.value)} min="2026-04-23" max="2026-04-26" className="mt-1" /></div>
-                            <div><Label>Check-out Date *</Label><Input type="date" value={formData.accommodationCheckOut} onChange={(e) => updateField("accommodationCheckOut", e.target.value)} min={formData.accommodationCheckIn || "2026-04-24"} max="2026-04-27" className="mt-1" /></div>
+                            <div><Label>Check-in Date *</Label><Input type="date" value={formData.accommodationCheckIn} onChange={(e) => updateField("accommodationCheckIn", e.target.value)} min="2026-09-04" max="2026-09-06" className="mt-1" /></div>
+                            <div><Label>Check-out Date *</Label><Input type="date" value={formData.accommodationCheckOut} onChange={(e) => updateField("accommodationCheckOut", e.target.value)} min={formData.accommodationCheckIn || "2026-09-05"} max="2026-09-07" className="mt-1" /></div>
                           </div>
                           {priceCalculation?.accommodationNights > 0 && (
                             <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-700">
                               <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">{formData.accommodationRoomType === 'single' ? 'Single' : 'Sharing'} × {priceCalculation.accommodationNights} night{priceCalculation.accommodationNights > 1 ? 's' : ''}</span>
+                                <span className="text-gray-600">{({ single: 'Single occupancy', double: 'Double occupancy', sharing: 'Sharing (per person)' } as Record<string, string>)[formData.accommodationRoomType] || 'Room'} × {priceCalculation.accommodationNights} night{priceCalculation.accommodationNights > 1 ? 's' : ''}</span>
                                 <span className="font-semibold">₹{priceCalculation.accommodationFees.toLocaleString('en-IN')}</span>
                               </div>
-                              <p className="text-xs text-gray-500 mt-1">+ 18% GST will be added</p>
+                              <p className="text-xs text-gray-500 mt-1">+ applicable taxes will be added</p>
                             </div>
                           )}
                         </div>

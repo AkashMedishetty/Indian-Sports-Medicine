@@ -26,7 +26,7 @@ export const ismc = {
     city: conferenceConfig.venue.city, // Hyderabad
     state: conferenceConfig.venue.state, // Telangana
     label: 'Hyderabad, India',
-    note: 'Venue to be announced',
+    note: 'Trident Hotel, Hyderabad',
   },
 
   registration: {
@@ -155,7 +155,7 @@ export const ismc = {
       'A hub for sports science and elite healthcare, Hyderabad blends rich heritage with world-class infrastructure — the right stage for a national sports medicine conference.',
     image: '/ismc/venue/charminar-wide.jpg', // Charminar (Wikimedia, CC BY-SA 4.0 — swap for an owned image before print)
     facts: [
-      { k: 'Venue', v: 'To be announced' },
+      { k: 'Venue', v: 'Trident Hotel, Hyderabad' },
       { k: 'Dates', v: 'Sep 5–6, 2026' },
       { k: 'Workshop', v: 'Sep 4, 2026' },
     ],
