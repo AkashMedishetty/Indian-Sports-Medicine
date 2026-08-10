@@ -1173,6 +1173,16 @@ export default function AbstractsPage() {
                     </Button>
                   </motion.div>
 
+                  {!session && (
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Link href="/register">
+                        <Button className="px-8 py-6 text-lg bg-transparent border-2 border-white/80 text-white hover:bg-white/10 rounded-2xl shadow-2xl font-bold">
+                          <UserPlus className="w-5 h-5 mr-2" />Register Now
+                        </Button>
+                      </Link>
+                    </motion.div>
+                  )}
+
                   {abstractsConfig?.isFinalSubmissionOpen && (
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button onClick={() => { if (session) { setActiveFlow('final-submission'); setIsAuthenticated(true) } else { setActiveFlow('final-submission'); setShowLoginModal(true) } }} className="px-8 py-6 text-lg bg-green-600 hover:bg-green-700 text-white rounded-2xl shadow-2xl font-bold">
