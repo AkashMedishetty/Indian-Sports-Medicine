@@ -52,19 +52,22 @@ export interface TierPricing {
 // faculty/physiotherapist/international are provisional — confirm with client.
 const PRICING_BY_TIER: Record<RegistrationTier, TierPricing> = {
 	"Early Bird": {
-		"iasm-member":  { amount: 3500, currency: "INR", label: "IASM Member" },
-		"non-member":   { amount: 4000, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 3000, currency: "INR", label: "Postgraduate" },
+		"iasm-member":     { amount: 3500, currency: "INR", label: "IASM Member" },
+		"non-member":      { amount: 4000, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 3000, currency: "INR", label: "Postgraduate" },
+		"physiotherapy-pg": { amount: 2000, currency: "INR", label: "Physiotherapy PG" },
 	},
 	"Regular": {
-		"iasm-member":  { amount: 4000, currency: "INR", label: "IASM Member" },
-		"non-member":   { amount: 4500, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 3500, currency: "INR", label: "Postgraduate" },
+		"iasm-member":     { amount: 4000, currency: "INR", label: "IASM Member" },
+		"non-member":      { amount: 4500, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 3500, currency: "INR", label: "Postgraduate" },
+		"physiotherapy-pg": { amount: 2000, currency: "INR", label: "Physiotherapy PG" },
 	},
 	"Spot Registration": {
-		"iasm-member":  { amount: 5000, currency: "INR", label: "IASM Member" },
-		"non-member":   { amount: 5000, currency: "INR", label: "Non-Member" },
-		"postgraduate": { amount: 4000, currency: "INR", label: "Postgraduate" },
+		"iasm-member":     { amount: 5000, currency: "INR", label: "IASM Member" },
+		"non-member":      { amount: 5000, currency: "INR", label: "Non-Member" },
+		"postgraduate":    { amount: 4000, currency: "INR", label: "Postgraduate" },
+		"physiotherapy-pg": { amount: 2000, currency: "INR", label: "Physiotherapy PG" },
 	},
 }
 

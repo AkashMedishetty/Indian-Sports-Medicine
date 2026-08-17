@@ -53,8 +53,8 @@ function getRegistrationStatus(workshop: any, now: Date): string {
 
 function canRegisterForWorkshop(workshop: any, now: Date): boolean {
   const seatsAvailable = workshop.maxSeats === 0 || workshop.bookedSeats < workshop.maxSeats
-  return workshop.isActive && 
-         now >= new Date(workshop.registrationStart) && 
-         now <= new Date(workshop.registrationEnd) && 
-         seatsAvailable
+  // A missing registration window means the workshop is open (no date gating).
+  const afterStart = !workshop.registrationStart || now >= new Date(workshop.registrationStart)
+  const beforeEnd = !workshop.registrationEnd || now <= new Date(workshop.registrationEnd)
+  return workshop.isActive && afterStart && beforeEnd && seatsAvailable
 }

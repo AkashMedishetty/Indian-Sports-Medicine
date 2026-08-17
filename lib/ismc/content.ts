@@ -92,6 +92,11 @@ export const ismc = {
         spot: 4000,
       },
     ],
+    // Flat / add-on rates shown below the tier cards
+    extras: [
+      { label: 'Physiotherapy PG', amount: 2000, note: 'Flat rate — all periods' },
+      { label: 'Pre-conference workshop', amount: 1200, note: 'Sep 4 · optional add-on' },
+    ],
   },
 
   nav: [

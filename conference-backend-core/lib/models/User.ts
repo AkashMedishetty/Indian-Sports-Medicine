@@ -249,7 +249,7 @@ const UserSchema = new Schema<IUser>({
     }],
     accommodation: {
       required: { type: Boolean, default: false },
-      roomType: { type: String, enum: ['single', 'sharing'] },
+      roomType: { type: String, enum: ['single', 'double', 'sharing'] },
       checkIn: { type: String },
       checkOut: { type: String },
       nights: { type: Number, default: 0 },

@@ -465,6 +465,20 @@ export function Fees() {
           ))}
         </div>
 
+        {ismc.fees.extras && ismc.fees.extras.length > 0 && (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {ismc.fees.extras.map((x) => (
+              <div key={x.label} className="p-glass flex items-center justify-between gap-4 rounded-2xl px-5 py-4">
+                <div>
+                  <div className="ismc-body text-sm font-semibold text-[var(--p-text)]">{x.label}</div>
+                  <div className="ismc-mono mt-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--p-text-faint)]">{x.note}</div>
+                </div>
+                <div className="ismc-display text-lg font-semibold" style={{ color: 'var(--p-accent-deep)' }}>{inr(x.amount)}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-6 flex flex-col gap-4 rounded-3xl border p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8" style={{ borderColor: 'var(--p-border)', background: 'var(--p-bg-soft)' }}>
           <p className="ismc-body text-sm text-[var(--p-text)]">
             <span className="font-semibold">Residential packages</span> (stay + registration) are available on request — discounted rates apply.

@@ -417,8 +417,11 @@ export default function RegisterPage() {
         if (value === 'Postgraduate') {
           newData.registrationType = 'postgraduate'
           newData.membershipNumber = ''
-        } else if (prev.registrationType === 'postgraduate') {
-          // Switched away from Postgraduate → let them choose membership
+        } else if (value === 'Physiotherapy PG') {
+          newData.registrationType = 'physiotherapy-pg'
+          newData.membershipNumber = ''
+        } else if (prev.registrationType === 'postgraduate' || prev.registrationType === 'physiotherapy-pg') {
+          // Switched away from a flat-rate designation → let them choose membership
           newData.registrationType = ''
         }
       }
@@ -1718,9 +1721,9 @@ export default function RegisterPage() {
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Membership *</label>
-                {formData.designation === 'Postgraduate' && (
+                {(formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG') && (
                   <div className="mb-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-gray-700">
-                    Postgraduate registration — a flat rate applies; no membership needed.
+                    {formData.designation} registration — a flat rate applies; no membership needed.
                   </div>
                 )}
                 {/* Special Offer Banner */}
@@ -1743,11 +1746,11 @@ export default function RegisterPage() {
               >
                 {registrationTypes
                   .filter(type => {
-                    // Postgraduate pricing is derived from the category (flat rate),
-                    // so it's never a membership option; and membership doesn't apply
-                    // when the category is Postgraduate.
-                    if (type.value === 'postgraduate') return false
-                    if (formData.designation === 'Postgraduate') return false
+                    // Postgraduate and Physiotherapy PG are flat rates derived from the
+                    // designation, so they're never membership radios, and membership
+                    // doesn't apply when one of those designations is selected.
+                    if (type.value === 'postgraduate' || type.value === 'physiotherapy-pg') return false
+                    if (formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG') return false
                     return true
                   })
                   .map((type) => (
@@ -1817,7 +1820,7 @@ export default function RegisterPage() {
                         </label>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {workshop.price ? `₹${workshop.price.toLocaleString()}` : 'Included in registration'}
-                          {workshop.availableSeats !== undefined && (
+                          {workshop.availableSeats !== undefined && workshop.availableSeats < 999999 && (
                             <span className={`ml-2 ${workshop.availableSeats > 10 ? 'text-green-600' :
                                 workshop.availableSeats > 0 ? 'text-yellow-600' : 'text-red-600'
                               }`}>
