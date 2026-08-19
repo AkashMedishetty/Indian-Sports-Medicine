@@ -1060,6 +1060,26 @@ export default function RegisterPage() {
 
           // @ts-ignore
           const rzp = new window.Razorpay(options)
+          // Persist failed transactions (required by the payment security audit)
+          rzp.on('payment.failed', async function (response: any) {
+            try {
+              await fetch('/api/payment/record-failure', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response?.error?.metadata?.order_id || orderData.data.id,
+                  description: response?.error?.description,
+                  code: response?.error?.code,
+                }),
+              })
+            } catch { /* best-effort logging; don't block the UI */ }
+            setLoading(false)
+            toast({
+              title: 'Payment Failed',
+              description: response?.error?.description || 'Your payment could not be completed. Please try again.',
+              variant: 'destructive',
+            })
+          })
           rzp.open()
           return
         }
