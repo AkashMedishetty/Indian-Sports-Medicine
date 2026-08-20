@@ -44,6 +44,20 @@ export async function POST(request: NextRequest) {
 
   // Failure path — Razorpay posts error[...] fields and no signature.
   if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+    const failOrderId = params['error[metadata][order_id]'] || razorpay_order_id
+    if (failOrderId) {
+      try {
+        await fetch(`${origin}/api/payment/record-failure`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id: failOrderId,
+            description: params['error[description]'] || params['error_description'],
+            code: params['error[code]'] || params['error_code'],
+          }),
+        })
+      } catch { /* best-effort */ }
+    }
     return fail(params['error[description]'] || params['error_description'] || 'Payment was not completed')
   }
 

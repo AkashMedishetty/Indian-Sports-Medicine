@@ -991,6 +991,25 @@ export default function RegisterPage() {
             }
           }
 
+          // Hosted checkout (HDFC Collect Now mandate): Razorpay redirects to our
+          // callback with no page-side data, so stash the pending registration
+          // server-side keyed by the order id. /api/payment/verify reads it back.
+          // Must succeed before we take payment, else the registration cannot be
+          // completed after the redirect.
+          try {
+            const storeRes = await fetch('/api/payment/store-pending', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ orderId: orderData.data.id, pendingRegistration: pendingData })
+            })
+            const storeData = await storeRes.json()
+            if (!storeData?.success) throw new Error(storeData?.message || 'store failed')
+          } catch {
+            toast({ title: "Payment Error", description: "Could not initialise the payment. Please try again.", variant: "destructive" })
+            setLoading(false)
+            return
+          }
+
           toast({ title: "Opening Payment Gateway", description: "Complete payment to finish registration" })
 
           const options = {
@@ -1006,6 +1025,11 @@ export default function RegisterPage() {
               contact: formData.phone
             },
             theme: { color: conferenceConfig.theme.primary },
+            // Hosted checkout (mandatory for HDFC Collect Now): Razorpay redirects
+            // the browser to callback_url with the payment result instead of using
+            // the in-page handler. Our /api/payment/callback verifies + completes it.
+            callback_url: `${window.location.origin}/api/payment/callback`,
+            redirect: true,
             handler: async function (response: any) {
               console.log('Payment successful, verifying and creating user...', response)
               setLoading(true)

@@ -293,7 +293,10 @@ async function recalculatePaymentBreakdown(user: any, totalAmount: number, curre
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, pendingRegistration } = body
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = body
+    // Mutable: the hosted-checkout (redirect) callback posts no page-side data,
+    // so we fall back to the server-stored pending registration below.
+    let pendingRegistration = body.pendingRegistration
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return NextResponse.json({
@@ -316,6 +319,18 @@ export async function POST(request: NextRequest) {
         success: false,
         message: 'Invalid payment signature'
       }, { status: 400 })
+    }
+
+    // Hosted-checkout (redirect) flow: the callback carries no page-side data,
+    // so load the pending registration that was stashed at order-creation time.
+    if (!pendingRegistration) {
+      try {
+        const db = mongoose.connection.db
+        const rec = db ? await db.collection('pending_registrations').findOne({ orderId: razorpay_order_id }) : null
+        if (rec?.pendingRegistration) pendingRegistration = rec.pendingRegistration
+      } catch (e) {
+        console.error('Failed to load stored pending registration:', e)
+      }
     }
 
     // Initialize Razorpay fresh for this request
@@ -484,6 +499,12 @@ export async function POST(request: NextRequest) {
           email: user.email,
           registrationId: user.registration.registrationId
         })
+
+        // Clean up the stashed pending registration (no longer needed)
+        try {
+          const db = mongoose.connection.db
+          if (db) await db.collection('pending_registrations').deleteOne({ orderId: razorpay_order_id })
+        } catch { /* best-effort */ }
 
         // Book workshop seats after successful payment + user creation
         if (pendingRegistration.registration?.workshopSelections?.length > 0) {
