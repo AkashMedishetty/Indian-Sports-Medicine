@@ -62,19 +62,10 @@ export default function RegisterPage() {
   // Avoid hydration glitches on first paint (observed on some mobile browsers)
   useEffect(() => {
     setMounted(true)
-    
-    // Load Razorpay SDK
-    const script = document.createElement('script')
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-    script.async = true
-    document.body.appendChild(script)
-    
-    return () => {
-      // Cleanup: remove script on unmount
-      if (document.body.contains(script)) {
-        document.body.removeChild(script)
-      }
-    }
+    // Note: the Razorpay Standard Checkout SDK (checkout.js) is intentionally NOT
+    // loaded — HDFC Collect Now requires the embedded/hosted checkout, which is a
+    // server-order + HTML form POST to Razorpay's embedded endpoint (see the
+    // payment step in handleSubmit).
   }, [])
 
   // Step configuration for the new design
@@ -1010,101 +1001,39 @@ export default function RegisterPage() {
             return
           }
 
-          toast({ title: "Opening Payment Gateway", description: "Complete payment to finish registration" })
+          toast({ title: "Redirecting to secure checkout", description: "Complete the payment to finish your registration." })
 
-          const options = {
-            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-            amount: orderData.data.amount,
+          // HDFC Collect Now EMBEDDED / hosted checkout (mandatory — NOT the JS
+          // Standard Checkout). Submit an HTML form to Razorpay's embedded endpoint;
+          // Razorpay renders its hosted payment page and POSTs the result to
+          // callback_url on success (our /api/payment/callback verifies + completes
+          // the registration), or sends the user to cancel_url if they abandon.
+          // Docs: hdfcbank-collectnow-docs.razorpay.com .../hosted/integration-steps
+          const embeddedFields: Record<string, string> = {
+            key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
+            order_id: orderData.data.id,
+            amount: String(orderData.data.amount),
             currency: orderData.data.currency,
             name: conferenceConfig.shortName,
             description: 'Conference Registration Fee',
-            order_id: orderData.data.id,
-            prefill: {
-              name: `${formData.firstName} ${formData.lastName}`,
-              email: formData.email,
-              contact: formData.phone
-            },
-            theme: { color: conferenceConfig.theme.primary },
-            // Hosted checkout (mandatory for HDFC Collect Now): Razorpay redirects
-            // the browser to callback_url with the payment result instead of using
-            // the in-page handler. Our /api/payment/callback verifies + completes it.
             callback_url: `${window.location.origin}/api/payment/callback`,
-            redirect: true,
-            handler: async function (response: any) {
-              console.log('Payment successful, verifying and creating user...', response)
-              setLoading(true)
-              toast({ title: "Payment Successful!", description: "Completing your registration..." })
-
-              try {
-                const verifyResponse = await fetch('/api/payment/verify', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_signature: response.razorpay_signature,
-                    pendingRegistration: pendingData
-                  })
-                })
-
-                const verifyResult = await verifyResponse.json()
-                setLoading(false)
-
-                if (verifyResult.success) {
-                  setPaymentMethod('gateway')
-                  setRegistrationData({
-                    email: pendingData.email,
-                    name: `${pendingData.profile.firstName} ${pendingData.profile.lastName}`,
-                    registrationId: verifyResult.data.registrationId,
-                    paymentId: response.razorpay_payment_id,
-                    amount: orderData.data.amount / 100,
-                    currency: orderData.data.currency
-                  })
-                  toast({ title: "Registration Complete!", description: "Check your email for confirmation." })
-                  setStep(4)
-                } else if (verifyResult.paymentSuccessful) {
-                  toast({ title: "Payment Successful", description: verifyResult.message || "Our team will complete your registration.", variant: "default" })
-                  alert(`✅ Payment Successful!\n\n${verifyResult.message}\n\nPayment ID: ${verifyResult.support?.paymentId}\nOrder ID: ${verifyResult.support?.orderId}\n\nPlease contact: ${verifyResult.support?.email}`)
-                } else {
-                  toast({ title: "Error", description: verifyResult.message || "Failed to complete registration", variant: "destructive" })
-                }
-              } catch (error) {
-                console.error('Payment verification error:', error)
-                setLoading(false)
-                toast({ title: "Error", description: "Failed to verify payment. Please contact support.", variant: "destructive" })
-              }
-            },
-            modal: {
-              ondismiss: function() {
-                setLoading(false)
-                toast({ title: "Payment Cancelled", description: "No charges applied. Please try again when ready.", variant: "destructive" })
-              }
-            }
+            cancel_url: `${window.location.origin}/register?payment=cancelled`,
+            'prefill[name]': `${formData.firstName} ${formData.lastName}`,
+            'prefill[email]': formData.email,
+            'prefill[contact]': formData.phone,
           }
-
-          // @ts-ignore
-          const rzp = new window.Razorpay(options)
-          // Persist failed transactions (required by the payment security audit)
-          rzp.on('payment.failed', async function (response: any) {
-            try {
-              await fetch('/api/payment/record-failure', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  razorpay_order_id: response?.error?.metadata?.order_id || orderData.data.id,
-                  description: response?.error?.description,
-                  code: response?.error?.code,
-                }),
-              })
-            } catch { /* best-effort logging; don't block the UI */ }
-            setLoading(false)
-            toast({
-              title: 'Payment Failed',
-              description: response?.error?.description || 'Your payment could not be completed. Please try again.',
-              variant: 'destructive',
-            })
+          const embeddedForm = document.createElement('form')
+          embeddedForm.method = 'POST'
+          embeddedForm.action = 'https://api.razorpay.com/v1/checkout/embedded'
+          Object.entries(embeddedFields).forEach(([k, v]) => {
+            const input = document.createElement('input')
+            input.type = 'hidden'
+            input.name = k
+            input.value = v
+            embeddedForm.appendChild(input)
           })
-          rzp.open()
+          document.body.appendChild(embeddedForm)
+          embeddedForm.submit()
           return
         }
 
