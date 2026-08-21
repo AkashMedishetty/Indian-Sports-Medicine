@@ -103,9 +103,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate base registration fee
     const registrationCategory = categories[registrationType]
-    // Faculty registration is complimentary — base fee is 0
-    const isFaculty = registrationType === 'faculty'
-    if (!registrationCategory && !isFaculty) {
+    if (!registrationCategory) {
       return NextResponse.json({
         success: false,
         message: `Invalid registration type: ${registrationType}`
@@ -139,9 +137,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Apply age-based free registration for senior citizens (only if enabled)
-    let baseAmount = isFaculty ? 0 : (registrationCategory?.amount || 0)
+    let baseAmount = registrationCategory?.amount || 0
     const currency = registrationCategory?.currency || 'INR'
-    const registrationLabel = isFaculty ? 'Faculty (Complimentary)' : (registrationCategory?.label || registrationType)
+    const registrationLabel = registrationCategory?.label || registrationType
     
     // Check if senior citizen exemption applies (only if enabled)
     const appliesForSeniorExemption = 

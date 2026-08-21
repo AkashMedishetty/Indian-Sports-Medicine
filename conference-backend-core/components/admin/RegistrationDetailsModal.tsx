@@ -828,7 +828,13 @@ export function RegistrationDetailsModal({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Consultant">Consultant</SelectItem>
-                          <SelectItem value="PG/Student">PG/Student</SelectItem>
+                          <SelectItem value="Physiotherapist">Physiotherapist</SelectItem>
+                          <SelectItem value="Strength & Conditioning Coach">Strength & Conditioning Coach</SelectItem>
+                          <SelectItem value="Psychologist">Psychologist</SelectItem>
+                          <SelectItem value="Nutritionist">Nutritionist</SelectItem>
+                          <SelectItem value="Postgraduate">Postgraduate</SelectItem>
+                          <SelectItem value="Physiotherapy PG">Physiotherapy PG</SelectItem>
+                          <SelectItem value="Faculty">Faculty</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -908,10 +914,12 @@ export function RegistrationDetailsModal({
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="cvsi-member">CVSI Member</SelectItem>
+                          <SelectItem value="iasm-member">IASM Member</SelectItem>
                           <SelectItem value="non-member">Non-Member</SelectItem>
-                          <SelectItem value="resident">Resident</SelectItem>
-                          <SelectItem value="international">International</SelectItem>
+                          <SelectItem value="postgraduate">Postgraduate</SelectItem>
+                          <SelectItem value="physiotherapy-pg">Physiotherapy PG</SelectItem>
+                          <SelectItem value="faculty">Faculty</SelectItem>
+                          <SelectItem value="delegate">Delegate</SelectItem>
                           <SelectItem value="complimentary">Complimentary</SelectItem>
                         </SelectContent>
                       </Select>

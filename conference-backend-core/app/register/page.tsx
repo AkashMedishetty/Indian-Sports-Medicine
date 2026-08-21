@@ -411,7 +411,10 @@ export default function RegisterPage() {
         } else if (value === 'Physiotherapy PG') {
           newData.registrationType = 'physiotherapy-pg'
           newData.membershipNumber = ''
-        } else if (prev.registrationType === 'postgraduate' || prev.registrationType === 'physiotherapy-pg') {
+        } else if (value === 'Faculty') {
+          newData.registrationType = 'faculty'
+          newData.membershipNumber = ''
+        } else if (prev.registrationType === 'postgraduate' || prev.registrationType === 'physiotherapy-pg' || prev.registrationType === 'faculty') {
           // Switched away from a flat-rate designation → let them choose membership
           newData.registrationType = ''
         }
@@ -1694,7 +1697,7 @@ export default function RegisterPage() {
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Membership *</label>
-                {(formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG') && (
+                {(formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG' || formData.designation === 'Faculty') && (
                   <div className="mb-2 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-gray-700">
                     {formData.designation} registration — a flat rate applies; no membership needed.
                   </div>
@@ -1719,11 +1722,11 @@ export default function RegisterPage() {
               >
                 {registrationTypes
                   .filter(type => {
-                    // Postgraduate and Physiotherapy PG are flat rates derived from the
-                    // designation, so they're never membership radios, and membership
+                    // Postgraduate, Physiotherapy PG and Faculty are flat rates derived from
+                    // the designation, so they're never membership radios, and membership
                     // doesn't apply when one of those designations is selected.
-                    if (type.value === 'postgraduate' || type.value === 'physiotherapy-pg') return false
-                    if (formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG') return false
+                    if (type.value === 'postgraduate' || type.value === 'physiotherapy-pg' || type.value === 'faculty') return false
+                    if (formData.designation === 'Postgraduate' || formData.designation === 'Physiotherapy PG' || formData.designation === 'Faculty') return false
                     return true
                   })
                   .map((type) => (

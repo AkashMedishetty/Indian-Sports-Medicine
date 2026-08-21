@@ -295,7 +295,7 @@ export const conferenceConfig: ConferenceConfig = {
     // Form field options (used in dropdowns and validation)
     formFields: {
       titles: ['Dr.', 'Prof.', 'Mr.', 'Mrs.', 'Ms.'],
-      designations: ['Consultant', 'Physiotherapist', 'Strength & Conditioning Coach', 'Psychologist', 'Nutritionist', 'Postgraduate', 'Physiotherapy PG'],
+      designations: ['Consultant', 'Physiotherapist', 'Strength & Conditioning Coach', 'Psychologist', 'Nutritionist', 'Postgraduate', 'Physiotherapy PG', 'Faculty'],
       relationshipTypes: ['Spouse', 'Child', 'Parent', 'Friend', 'Colleague', 'Other'],
       paymentMethods: ['bank-transfer', 'online', 'pay-now', 'cash']
     },
@@ -318,6 +318,10 @@ export const conferenceConfig: ConferenceConfig = {
       {
         key: "physiotherapy-pg",
         label: "Physiotherapy PG"
+      },
+      {
+        key: "faculty",
+        label: "Faculty"
       }
     ],
 

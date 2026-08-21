@@ -63,7 +63,7 @@ export const userRegistrationSchema = z.object({
   }),
   
   registration: z.object({
-    type: z.enum(['regular', 'student', 'international', 'faculty']),
+    type: z.enum(['iasm-member', 'non-member', 'postgraduate', 'physiotherapy-pg', 'faculty', 'delegate', 'complimentary']),
     membershipNumber: z.string().max(50, 'Membership number must be less than 50 characters').optional(),
     workshopSelections: z.array(z.string()).max(10, 'Cannot select more than 10 workshops').optional(),
     accompanyingPersons: z.array(z.object({
@@ -121,7 +121,7 @@ export const newPasswordSchema = z.object({
 
 // Payment Schema
 export const paymentSchema = z.object({
-  registrationType: z.enum(['regular', 'student', 'international', 'faculty']),
+  registrationType: z.enum(['iasm-member', 'non-member', 'postgraduate', 'physiotherapy-pg', 'faculty', 'delegate', 'complimentary']),
   workshopSelections: z.array(z.string()).max(10, 'Cannot select more than 10 workshops').optional(),
   accompanyingPersons: z.number().min(0, 'Number of accompanying persons must be non-negative').max(5, 'Cannot have more than 5 accompanying persons'),
   discountCode: z.string().max(50, 'Discount code must be less than 50 characters').optional(),

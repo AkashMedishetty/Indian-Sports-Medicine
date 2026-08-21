@@ -105,6 +105,16 @@ export async function POST(request: NextRequest) {
                                     'pg-student': 'postgraduate',
                                     'pg student': 'postgraduate',
                                     'student': 'postgraduate',
+                                    'physiotherapy pg': 'physiotherapy-pg',
+                                    'physiotherapy-pg': 'physiotherapy-pg',
+                                    'physio pg': 'physiotherapy-pg',
+                                    'faculty': 'faculty',
+                                    'iasm member': 'iasm-member',
+                                    'iasm-member': 'iasm-member',
+                                    'member': 'iasm-member',
+                                    'non-member': 'non-member',
+                                    'non member': 'non-member',
+                                    'delegate': 'delegate',
                                     'complimentary': 'complimentary',
                                     'sponsored': 'sponsored'
                                 }
