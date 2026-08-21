@@ -1838,8 +1838,8 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Accompanying Persons Section */}
-            <div className="border-t pt-6">
+            {/* Accompanying Persons Section — hidden per client (not offered) */}
+            <div className="border-t pt-6 hidden">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Accompanying Persons (Optional)</h3>
                 <Button
