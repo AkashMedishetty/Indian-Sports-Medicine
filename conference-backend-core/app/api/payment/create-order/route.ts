@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
     const trackingUserId = orderNotes.userId
     const trackingUserEmail = orderNotes.email
     
-    if (trackingUserId) {
+    if (trackingUserId && receiptId) {
       const attemptResult = await paymentAttempts.recordAttempt({
         userId: trackingUserId,
         userEmail: trackingUserEmail,

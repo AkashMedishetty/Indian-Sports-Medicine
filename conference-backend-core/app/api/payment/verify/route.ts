@@ -130,6 +130,31 @@ async function recalculatePaymentBreakdown(user: any, totalAmount: number, curre
       }
     })
 
+    // Fallback: pricing normally lives in the `pricing_tiers` collection (the same
+    // source /api/payment/calculate reads), not the `configurations` collection.
+    if (Object.keys(registrationCategories).length === 0) {
+      try {
+        const db = mongoose.connection.db
+        if (db) {
+          const nowIST = new Date(Date.now() + (5.5 * 60 * 60 * 1000))
+          const todayIST = nowIST.toISOString().split('T')[0]
+          const allTiers = await db.collection('pricing_tiers').find({ active: true }).sort({ startDate: 1 }).toArray()
+          const activeTier = allTiers.find((t: any) => {
+            const s = new Date(t.startDate).toISOString().split('T')[0]
+            const e = new Date(t.endDate).toISOString().split('T')[0]
+            return todayIST >= s && todayIST <= e
+          }) || allTiers.find((t: any) => t.name === 'Regular') || allTiers[0]
+          if (activeTier?.categories) {
+            registrationCategories = activeTier.categories
+            currentTierName = activeTier.name || currentTierName
+            console.log('📊 Pricing loaded from pricing_tiers collection:', currentTierName)
+          }
+        }
+      } catch (e) {
+        console.error('pricing_tiers fallback failed:', e)
+      }
+    }
+
     // Database pricing is required - no fallback
     if (Object.keys(registrationCategories).length === 0) {
       console.error('❌ CRITICAL: No registration categories found in database!')
@@ -314,7 +339,14 @@ export async function POST(request: NextRequest) {
       .update(body_string)
       .digest('hex')
 
-    if (expected_signature !== razorpay_signature) {
+    const signatureVerified = expected_signature === razorpay_signature
+    console.log('🔐 [AUDIT] Signature verification:', JSON.stringify({
+      razorpay_order_id,
+      razorpay_payment_id,
+      signature_verified: signatureVerified,
+    }))
+    if (!signatureVerified) {
+      console.log('❌ [AUDIT] Payment verification FAILED — invalid signature:', JSON.stringify({ razorpay_order_id, razorpay_payment_id }))
       return NextResponse.json({
         success: false,
         message: 'Invalid payment signature'
@@ -344,16 +376,27 @@ export async function POST(request: NextRequest) {
       }, { status: 500 })
     }
 
-    // Fetch payment details from Razorpay
+    // Independent status check (dual inquiry) via the Razorpay Status API
     const payment = await razorpay.payments.fetch(razorpay_payment_id)
     const order = await razorpay.orders.fetch(razorpay_order_id)
+    console.log('🔎 [AUDIT] Razorpay Status API (dual inquiry):', JSON.stringify({
+      razorpay_order_id,
+      razorpay_payment_id,
+      payment_status: payment.status,
+      payment_amount: payment.amount,
+      payment_method: payment.method,
+      order_status: order.status,
+      order_amount: order.amount,
+    }))
 
     if (payment.status !== 'captured' && payment.status !== 'authorized') {
+      console.log('❌ [AUDIT] Payment not successful:', JSON.stringify({ razorpay_order_id, razorpay_payment_id, payment_status: payment.status }))
       return NextResponse.json({
         success: false,
         message: 'Payment not successful'
       }, { status: 400 })
     }
+    console.log('✅ [AUDIT] Payment verification SUCCESS:', JSON.stringify({ razorpay_order_id, razorpay_payment_id, payment_status: payment.status, amount: payment.amount }))
 
     let user: any = null
 
