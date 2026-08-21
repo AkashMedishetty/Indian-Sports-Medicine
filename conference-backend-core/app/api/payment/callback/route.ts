@@ -80,10 +80,11 @@ export async function POST(request: NextRequest) {
     })
     const data = await res.json().catch(() => ({} as any))
     if (res.ok && data?.success) {
-      const rid = data?.registrationId
+      // verify responds as { success, data: { registrationId } }
+      const rid = data?.data?.registrationId || data?.registrationId
       const dest = rid
-        ? `${origin}/register/status/${encodeURIComponent(rid)}`
-        : `${origin}/dashboard`
+        ? `${origin}/register/status/${encodeURIComponent(String(rid))}?payment=success`
+        : `${origin}/register?payment=success`
       return NextResponse.redirect(dest, { status: 303 })
     }
     return fail(data?.message || 'Payment verification failed')
