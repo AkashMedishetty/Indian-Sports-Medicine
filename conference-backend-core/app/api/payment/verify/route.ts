@@ -147,6 +147,11 @@ async function recalculatePaymentBreakdown(user: any, totalAmount: number, curre
           if (activeTier?.categories) {
             registrationCategories = activeTier.categories
             currentTierName = activeTier.name || currentTierName
+            // Accompanying-person fee also lives in the tier's categories (same as
+            // /api/payment/calculate), so the recalc breakdown matches the charge.
+            if (accompanyingPersonFeeFromDB == null && activeTier.categories['accompanying']?.amount != null) {
+              accompanyingPersonFeeFromDB = activeTier.categories['accompanying'].amount
+            }
             console.log('📊 Pricing loaded from pricing_tiers collection:', currentTierName)
           }
         }
