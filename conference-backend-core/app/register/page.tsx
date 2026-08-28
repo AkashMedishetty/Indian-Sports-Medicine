@@ -62,10 +62,19 @@ export default function RegisterPage() {
   // Avoid hydration glitches on first paint (observed on some mobile browsers)
   useEffect(() => {
     setMounted(true)
-    // Note: the Razorpay Standard Checkout SDK (checkout.js) is intentionally NOT
-    // loaded — HDFC Collect Now requires the embedded/hosted checkout, which is a
-    // server-order + HTML form POST to Razorpay's embedded endpoint (see the
-    // payment step in handleSubmit).
+
+    // Load the Razorpay Standard Checkout SDK (in-page modal). The register flow
+    // opens `new window.Razorpay(options).open()` on the payment step.
+    const script = document.createElement('script')
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script)
+      }
+    }
   }, [])
 
   // Step configuration for the new design
@@ -192,10 +201,13 @@ export default function RegisterPage() {
                 return // Stop execution
               }
               
-              // Set payment method based on admin configuration - NO user choice
+              // Set payment method based on admin configuration - NO user choice.
+              // NEXT_PUBLIC_FORCE_GATEWAY forces the gateway path locally for testing
+              // without flipping the shared DB config (never set this in prod/Vercel).
+              const forceGateway = process.env.NEXT_PUBLIC_FORCE_GATEWAY === 'true'
               setFormData(prev => ({
                 ...prev,
-                paymentMethod: paymentResult.data.gateway ? 'pay-now' : 'bank-transfer'
+                paymentMethod: (paymentResult.data.gateway || forceGateway) ? 'pay-now' : 'bank-transfer'
               }))
             }
           }
@@ -985,58 +997,80 @@ export default function RegisterPage() {
             }
           }
 
-          // Hosted checkout (HDFC Collect Now mandate): Razorpay redirects to our
-          // callback with no page-side data, so stash the pending registration
-          // server-side keyed by the order id. /api/payment/verify reads it back.
-          // Must succeed before we take payment, else the registration cannot be
-          // completed after the redirect.
-          try {
-            const storeRes = await fetch('/api/payment/store-pending', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ orderId: orderData.data.id, pendingRegistration: pendingData })
-            })
-            const storeData = await storeRes.json()
-            if (!storeData?.success) throw new Error(storeData?.message || 'store failed')
-          } catch {
-            toast({ title: "Payment Error", description: "Could not initialise the payment. Please try again.", variant: "destructive" })
-            setLoading(false)
-            return
-          }
+          toast({ title: "Opening Payment Gateway", description: "Complete payment to finish registration" })
 
-          toast({ title: "Redirecting to secure checkout", description: "Complete the payment to finish your registration." })
-
-          // HDFC Collect Now EMBEDDED / hosted checkout (mandatory — NOT the JS
-          // Standard Checkout). Submit an HTML form to Razorpay's embedded endpoint;
-          // Razorpay renders its hosted payment page and POSTs the result to
-          // callback_url on success (our /api/payment/callback verifies + completes
-          // the registration), or sends the user to cancel_url if they abandon.
-          // Docs: hdfcbank-collectnow-docs.razorpay.com .../hosted/integration-steps
-          const embeddedFields: Record<string, string> = {
-            key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
-            order_id: orderData.data.id,
-            amount: String(orderData.data.amount),
+          // Razorpay Standard Checkout (in-page modal). On success Razorpay calls
+          // `handler` client-side with the payment id / order id / signature; we
+          // POST those to /api/payment/verify (which re-verifies server-side and
+          // creates the user), then show the in-page confirmation (step 4).
+          const options = {
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            amount: orderData.data.amount,
             currency: orderData.data.currency,
             name: conferenceConfig.shortName,
             description: 'Conference Registration Fee',
-            callback_url: `${window.location.origin}/api/payment/callback`,
-            cancel_url: `${window.location.origin}/register?payment=cancelled`,
-            'prefill[name]': `${formData.firstName} ${formData.lastName}`,
-            'prefill[email]': formData.email,
-            'prefill[contact]': formData.phone,
+            order_id: orderData.data.id,
+            prefill: {
+              name: `${formData.firstName} ${formData.lastName}`,
+              email: formData.email,
+              contact: formData.phone
+            },
+            theme: { color: conferenceConfig.theme.primary },
+            handler: async function (response: any) {
+              console.log('Payment successful, verifying and creating user...', response)
+              setLoading(true)
+              toast({ title: "Payment Successful!", description: "Completing your registration..." })
+
+              try {
+                const verifyResponse = await fetch('/api/payment/verify', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    pendingRegistration: pendingData
+                  })
+                })
+
+                const verifyResult = await verifyResponse.json()
+                setLoading(false)
+
+                if (verifyResult.success) {
+                  setPaymentMethod('gateway')
+                  setRegistrationData({
+                    email: pendingData.email,
+                    name: `${pendingData.profile.firstName} ${pendingData.profile.lastName}`,
+                    registrationId: verifyResult.data.registrationId,
+                    paymentId: response.razorpay_payment_id,
+                    amount: orderData.data.amount / 100,
+                    currency: orderData.data.currency
+                  })
+                  toast({ title: "Registration Complete!", description: "Check your email for confirmation." })
+                  setStep(4)
+                } else if (verifyResult.paymentSuccessful) {
+                  toast({ title: "Payment Successful", description: verifyResult.message || "Our team will complete your registration.", variant: "default" })
+                  alert(`✅ Payment Successful!\n\n${verifyResult.message}\n\nPayment ID: ${verifyResult.support?.paymentId}\nOrder ID: ${verifyResult.support?.orderId}\n\nPlease contact: ${verifyResult.support?.email}`)
+                } else {
+                  toast({ title: "Error", description: verifyResult.message || "Failed to complete registration", variant: "destructive" })
+                }
+              } catch (error) {
+                console.error('Payment verification error:', error)
+                setLoading(false)
+                toast({ title: "Error", description: "Failed to verify payment. Please contact support.", variant: "destructive" })
+              }
+            },
+            modal: {
+              ondismiss: function() {
+                setLoading(false)
+                toast({ title: "Payment Cancelled", description: "No charges applied. Please try again when ready.", variant: "destructive" })
+              }
+            }
           }
-          const embeddedForm = document.createElement('form')
-          embeddedForm.method = 'POST'
-          embeddedForm.action = 'https://api.razorpay.com/v1/checkout/embedded'
-          Object.entries(embeddedFields).forEach(([k, v]) => {
-            const input = document.createElement('input')
-            input.type = 'hidden'
-            input.name = k
-            input.value = v
-            embeddedForm.appendChild(input)
-          })
-          document.body.appendChild(embeddedForm)
-          embeddedForm.submit()
+
+          // @ts-ignore - Razorpay is attached to window by checkout.js
+          const rzp = new window.Razorpay(options)
+          rzp.open()
           return
         }
 
@@ -2203,7 +2237,7 @@ export default function RegisterPage() {
                   <CreditCard className="w-5 h-5 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-900 dark:text-blue-100">Online Payment Gateway</p>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">You will be redirected to Razorpay after submitting</p>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">A secure Razorpay payment window will open after submitting</p>
                   </div>
                 </div>
               </div>
