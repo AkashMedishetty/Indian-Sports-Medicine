@@ -10,30 +10,27 @@ export async function createSMTPTransporter() {
   const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER
   const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS
   
+  // Only simulate when SMTP is genuinely NOT configured. We intentionally do NOT
+  // fall back to simulation on a live SMTP *error* — a real send failure must
+  // surface (recorded as 'failed'), not be silently disguised as 'sent'.
   if (!smtpHost || !smtpUser || !smtpPass) {
-    console.warn('SMTP configuration incomplete. Email functionality will be simulated.')
-    console.log('Required variables: SMTP_HOST, SMTP_USER, SMTP_PASS')
-    console.log('Current values:', { 
-      host: smtpHost ? 'SET' : 'NOT SET', 
-      user: smtpUser ? 'SET' : 'NOT SET', 
-      pass: smtpPass ? 'SET' : 'NOT SET' 
-    })
-    
-    // Return a mock transporter for development
+    console.warn('⚠️ SMTP not configured (SMTP_HOST/USER/PASS missing) — emails will be SIMULATED, not sent.')
     return {
       sendMail: async (mailOptions: any) => {
-        console.log('📧 EMAIL SIMULATION - Would send email:')
-        console.log('To:', mailOptions.to)
-        console.log('Subject:', mailOptions.subject)
-        console.log('Content:', mailOptions.text || 'HTML content provided')
+        console.log('📧 EMAIL SIMULATION (SMTP not configured) — To:', mailOptions.to, '| Subject:', mailOptions.subject)
         return { messageId: 'simulated-' + Date.now() }
       },
       verify: async () => true
     }
   }
 
-  // SMTP configuration
-  const smtpConfig = {
+  // Create the transporter and return it directly. We deliberately skip the
+  // pre-send transporter.verify() call: it performs a full extra AUTH handshake
+  // before every message, and providers like GoDaddy Professional Email throttle
+  // bursts of logins with a "535 Authentication Failed" even when the credentials
+  // are correct. sendMail() authenticates on its own; if it fails, the error
+  // propagates to the caller (and is logged + recorded as 'failed').
+  return nodemailer.createTransport({
     host: smtpHost,
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
@@ -44,33 +41,7 @@ export async function createSMTPTransporter() {
     tls: {
       rejectUnauthorized: false
     }
-  }
-
-  // Create transporter
-  const transporter = nodemailer.createTransport(smtpConfig)
-
-  // Verify connection configuration
-  try {
-    await transporter.verify()
-    console.log('✅ SMTP server is ready to take our messages')
-    return transporter
-  } catch (error) {
-    console.error('❌ SMTP connection error:', error)
-    console.warn('⚠️ Falling back to email simulation mode')
-    
-    // Return mock transporter on error
-    return {
-      sendMail: async (mailOptions: any) => {
-        console.log('📧 EMAIL SIMULATION (SMTP Error) - Would send email:')
-        console.log('To:', mailOptions.to)
-        console.log('Subject:', mailOptions.subject)
-        console.log('Content:', mailOptions.text || 'HTML content provided')
-        console.log('Error details:', error)
-        return { messageId: 'simulated-error-' + Date.now() }
-      },
-      verify: async () => true
-    }
-  }
+  })
 }
 
 // Send email function

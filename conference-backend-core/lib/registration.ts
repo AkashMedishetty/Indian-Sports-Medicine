@@ -61,7 +61,7 @@ const PRICING_BY_TIER: Record<RegistrationTier, TierPricing> = {
 	"Regular": {
 		"iasm-member":     { amount: 4000, currency: "INR", label: "IASM Member" },
 		"non-member":      { amount: 4500, currency: "INR", label: "Non-Member" },
-		"postgraduate":    { amount: 3500, currency: "INR", label: "Postgraduate" },
+		"postgraduate":    { amount: 2000, currency: "INR", label: "Postgraduate" },
 		"physiotherapy-pg": { amount: 2000, currency: "INR", label: "Physiotherapy PG" },
 		"faculty":         { amount: 3000, currency: "INR", label: "Faculty" },
 	},
