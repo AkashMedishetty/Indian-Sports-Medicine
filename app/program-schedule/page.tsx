@@ -1,18 +1,9 @@
 'use client';
 
-// IASMCON 2026 programme isn't published yet — this route shows a premium
-// "coming soon" page. The backend program-schedule page is untouched at
-// conference-backend-core/app/program-schedule/page.tsx. To re-enable it:
-//   export { default } from '@/conference-backend-core/app/program-schedule/page'
-
-import { ComingSoon } from '@/components/concepts/premium/ComingSoon';
+// IASMCON 2026 scientific programme — full schedule mirrored from the printed
+// brochure (data in lib/ismc/programme.ts, downloadable PDF in /public/brochures).
+import { Programme } from '@/components/concepts/premium/Programme';
 
 export default function ProgramSchedulePage() {
-  return (
-    <ComingSoon
-      kicker="Programme"
-      title={<>Schedule<br />coming soon</>}
-      blurb="The full scientific programme for IASMCON 2026 — two days of sessions plus the pre-conference hands-on workshop on September 4 — is being finalised, and will be published here shortly."
-    />
-  );
+  return <Programme />;
 }
