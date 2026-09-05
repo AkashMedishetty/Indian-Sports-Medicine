@@ -2851,10 +2851,10 @@ export default function RegisterPage() {
     )
   }
 
-  // Registration OPEN for IASMCON 2026. (Was `if (!isAdmin)` — the ISSH
-  // end-of-registration gate that showed every non-admin a "closed" page.
-  // Set back to `if (!isAdmin)` to close online registration again.)
-  if (false as boolean) {
+  // Online registration CLOSED for IASMCON 2026 (conference is live). Non-admins
+  // see the closed page; admins can still open the form. To re-open, set this
+  // back to `if (false as boolean)`.
+  if (!isAdmin) {
     return (
       <div className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f0f4f8 0%, #e8f0f8 30%, #f5f0f8 60%, #f0f4f8 100%)' }}>
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -2887,7 +2887,7 @@ export default function RegisterPage() {
                 <p className="text-gray-600 text-sm mb-2">You can register directly at the venue:</p>
                 <p className="text-sm text-gray-700 font-medium">{conferenceConfig.venue.name}</p>
                 <p className="text-sm text-gray-500">{conferenceConfig.venue.city}, {conferenceConfig.venue.state}</p>
-                <p className="text-sm text-gray-500 mt-1">📅 April 25-26, 2026 | Registration desk opens at 8:00 AM</p>
+                <p className="text-sm text-gray-500 mt-1">📅 September 5-6, 2026 | Registration desk opens at 8:00 AM</p>
               </div>
               <p className="text-gray-400 text-xs">
                 For queries, contact us at <a href={`mailto:${conferenceConfig.contact.email}`} className="text-[#25406b] underline">{conferenceConfig.contact.email}</a> | {conferenceConfig.contact.phone}
