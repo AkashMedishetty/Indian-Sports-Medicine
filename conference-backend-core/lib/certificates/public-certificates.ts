@@ -215,11 +215,12 @@ export async function renderDownload(token: string): Promise<DownloadResult> {
   const pdf = await templatePdf(template)
   if (!pdf) return { ok: false, reason: 'unavailable' }
 
-  const { bytes } = await renderSpotCertificate(pdf, template.fields, {
-    name,
-    title: abstract?.title ?? '',
-    abstractId: abstract?.abstractId ?? '',
-  })
+  const { bytes } = await renderSpotCertificate(
+    pdf,
+    template.fields,
+    { name, title: abstract?.title ?? '', abstractId: abstract?.abstractId ?? '' },
+    { title: `${conferenceConfig.shortName} — ${CERTIFICATE_LABELS[kind]}` },
+  )
 
   const suffix = a && abstract?.abstractId ? ` - ${safeFilePart(abstract.abstractId)}` : ''
   const fileName = `${conferenceConfig.shortName} ${CERTIFICATE_LABELS[kind]} - ${safeFilePart(name) || 'Delegate'}${suffix}.pdf`

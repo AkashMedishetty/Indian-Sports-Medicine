@@ -632,6 +632,7 @@ export function MainLayout({ children, currentPage, showSearch = false }: MainLa
             </div>
             <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
               <p>&copy; {new Date().getFullYear()} {conferenceConfig.organizationName}. All rights reserved.</p>
+              <p className="mt-1 text-xs text-gray-500">Event Partner — Apple Events</p>
             </div>
           </div>
         </footer>

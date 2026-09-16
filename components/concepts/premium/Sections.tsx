@@ -593,9 +593,12 @@ export function Footer() {
             <Link href={ismc.cta.login} className="transition-colors hover:text-[var(--p-accent-deep)]">Login</Link>
           </div>
         </div>
-        <div className="flex items-center justify-between border-t pt-8" style={{ borderColor: 'var(--p-border)' }}>
-          <p className="ismc-mono text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-faint)]">© 2026 IASMCON 2026 — Indian Association of Sports Medicine</p>
-          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="ismc-mono inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-muted)] transition-colors hover:text-[var(--p-text)]">
+        <div className="flex flex-col gap-5 border-t pt-8 sm:flex-row sm:items-end sm:justify-between" style={{ borderColor: 'var(--p-border)' }}>
+          <div className="ismc-mono space-y-1.5 text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-faint)]">
+            <p>© 2026 IASMCON 2026 — Indian Association of Sports Medicine. All rights reserved.</p>
+            <p>Event Partner — <span className="text-[var(--p-text-muted)]">Apple Events</span></p>
+          </div>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="ismc-mono inline-flex shrink-0 items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-[var(--p-text-muted)] transition-colors hover:text-[var(--p-text)]">
             Top <ArrowUp className="h-3.5 w-3.5" />
           </button>
         </div>

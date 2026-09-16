@@ -1,4 +1,4 @@
-import { PDFDocument, PDFFont, StandardFonts, rgb } from 'pdf-lib'
+import { PDFDocument, PDFFont, PDFName, StandardFonts, rgb } from 'pdf-lib'
 import type { SpotField, SpotFont, SpotValues } from './spot-fields'
 
 /** A problem with the uploaded file that the admin can fix and re-upload. */
@@ -132,11 +132,17 @@ export interface RenderResult {
   warnings: string[]
 }
 
+export interface RenderMeta {
+  /** Document title. Browsers show this as the tab name when the certificate opens inline. */
+  title?: string
+}
+
 /** Draw the enabled fields onto page 1 of the template. Extra pages are dropped. */
 export async function renderSpotCertificate(
   templateBytes: Uint8Array,
   fields: SpotField[],
-  values: SpotValues
+  values: SpotValues,
+  meta: RenderMeta = {}
 ): Promise<RenderResult> {
   const doc = await loadPdf(templateBytes)
   while (doc.getPageCount() > 1) doc.removePage(doc.getPageCount() - 1)
@@ -188,6 +194,19 @@ export async function renderSpotCertificate(
       })
     })
   }
+
+  // The uploaded template PDFs keep the title their design tool wrote (an
+  // unrelated event's name, in one case), which browsers show as the tab name
+  // when a certificate opens inline. Overwrite the document metadata, and drop
+  // any XMP stream so viewers fall back to the info dictionary set here.
+  const title = (meta.title ?? '').trim() || 'IASMCON 2026 Certificate'
+  doc.setTitle(title)
+  doc.setSubject('IASMCON 2026 Certificate')
+  doc.setAuthor('IASMCON 2026')
+  doc.setCreator('IASMCON 2026')
+  doc.setProducer('IASMCON 2026')
+  doc.setKeywords([])
+  doc.catalog.delete(PDFName.of('Metadata'))
 
   return { bytes: await doc.save(), warnings }
 }

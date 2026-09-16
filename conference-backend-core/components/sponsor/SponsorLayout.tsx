@@ -211,6 +211,7 @@ export function SponsorLayout({ children, sponsorData }: SponsorLayoutProps) {
       <footer className="bg-slate-900 text-white py-6 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm text-slate-400">
           <p>&copy; {new Date().getFullYear()} {conferenceConfig.organizationName} • Sponsor Portal</p>
+          <p className="mt-1 text-slate-500">Event Partner — Apple Events</p>
         </div>
       </footer>
     </div>
