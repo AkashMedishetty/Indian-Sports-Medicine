@@ -32,7 +32,9 @@ export const ELIGIBLE_REGISTRATION_STATUSES = ['paid', 'confirmed', 'pending']
 /** Staff, reviewer and sponsor logins carry registration numbers but are not delegates. */
 export const DELEGATE_ROLE = 'user'
 
-export const ELIGIBLE_ABSTRACT_STATUSES = ['accepted', 'final-submitted']
+// Everyone who submitted an abstract gets their presentation certificate,
+// regardless of the review outcome.
+export const ELIGIBLE_ABSTRACT_STATUSES = ['submitted', 'under-review', 'accepted', 'final-submitted', 'rejected']
 
 export interface RegistrantLike {
   role?: string
