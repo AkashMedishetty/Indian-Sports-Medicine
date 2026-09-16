@@ -15,6 +15,7 @@ import {
   CheckCircle, XCircle, RefreshCw, Eye, Download 
 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { conferenceConfig } from '@/conference-backend-core/config/conference.config'
 
 interface Recipient {
   _id: string
@@ -37,8 +38,8 @@ export function BulkCertificateEmailer() {
     hasCertificate: 'no'
   })
   const [emailContent, setEmailContent] = useState({
-    subject: 'Your Certificate of Participation - NEUROVASCON 2026',
-    message: 'Dear {name},\n\nThank you for participating in NEUROVASCON 2026. Please find your certificate of participation attached to this email.\n\nBest regards,\nNEUROVASCON 2026 Team'
+    subject: `Your Certificate of Participation - ${conferenceConfig.shortName}`,
+    message: `Dear {name},\n\nThank you for participating in ${conferenceConfig.shortName}. Please find your certificate of participation attached to this email.\n\nBest regards,\n${conferenceConfig.shortName} Team`
   })
   const [progress, setProgress] = useState({ sent: 0, failed: 0, total: 0 })
 
@@ -185,10 +186,9 @@ export function BulkCertificateEmailer() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="cvsi-member">CVSI Member</SelectItem>
-                <SelectItem value="non-member">Non Member</SelectItem>
-                <SelectItem value="resident">Resident/Fellow</SelectItem>
-                <SelectItem value="international">International</SelectItem>
+                {conferenceConfig.registration.categories.map((cat) => (
+                  <SelectItem key={cat.key} value={cat.key}>{cat.label}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

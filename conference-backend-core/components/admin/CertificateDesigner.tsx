@@ -25,9 +25,6 @@ interface CertificateElement {
   color?: string
   content?: string
   align?: 'left' | 'center' | 'right'
-  textIndent?: number // First line indent in pixels (for wrapping after inline text)
-  fontWeight?: 'normal' | 'bold'
-  autoFit?: boolean // Auto-shrink font size to fit text within bounding box
 }
 
 export function CertificateDesigner() {
@@ -94,51 +91,17 @@ export function CertificateDesigner() {
   const [resizing, setResizing] = useState(false)
   const [resizeStart, setResizeStart] = useState<{ x: number, y: number, width: number, height: number } | null>(null)
   const [resizeElementId, setResizeElementId] = useState<string | null>(null)
-  const [activeTemplateId, setActiveTemplateId] = useState('default')
-  const [templateList, setTemplateList] = useState<Array<{ id: string; title: string }>>([])
-  const [newTemplateId, setNewTemplateId] = useState('')
-
-  const TEMPLATE_PRESETS = [
-    { id: 'eposter', label: 'E-Poster' },
-    { id: 'free-paper', label: 'Free Paper' },
-    { id: 'award-paper', label: 'Award Paper' },
-    { id: 'workshop-sawbone', label: 'Saw Bone Workshop' },
-    { id: 'workshop-tendon', label: 'Tendon Workshop' },
-    { id: 'participation', label: 'Participation' },
-    { id: 'faculty', label: 'Faculty' },
-  ]
-
-  const ALL_VARIABLES = [
-    { key: '{name}', label: 'Participant Name', preview: 'Dr. John Doe' },
-    { key: '{title}', label: 'Full Title (wraps)', preview: 'Functional and Radiological Outcomes of Distal Radius Cancellous Compression Bone Grafting for Proximal Pole Scaphoid Nonunion: An Ambispective Cohort Study' },
-    { key: '{title_line1}', label: 'Title Line 1 (~65 chars)', preview: 'Functional and Radiological Outcomes of Distal Radius Cancellous' },
-    { key: '{title_line2}', label: 'Title Line 2 (~65 chars)', preview: 'Compression Bone Grafting for Proximal Pole Scaphoid Nonunion: An' },
-    { key: '{title_line3}', label: 'Title Line 3 (overflow)', preview: 'Ambispective Cohort Study' },
-    { key: '{abstractId}', label: 'Abstract ID', preview: 'ISSH2026-001-ABS-01' },
-    { key: '{authors}', label: 'Authors', preview: 'Dr. John Doe, Dr. Jane Smith' },
-    { key: '{authors_line1}', label: 'Authors Line 1', preview: 'Dr. John Doe, Dr. Jane Smith' },
-    { key: '{authors_line2}', label: 'Authors Line 2', preview: '' },
-    { key: '{institution}', label: 'Institution', preview: 'Apollo Hospital, Hyderabad' },
-    { key: '{registrationId}', label: 'Registration ID', preview: 'ISSH2026-001' },
-    { key: '{conference}', label: 'Conference Name', preview: conferenceConfig.shortName },
-    { key: '{startDate}', label: 'Start Date', preview: 'April 25, 2026' },
-    { key: '{endDate}', label: 'End Date', preview: 'April 26, 2026' },
-    { key: '{location}', label: 'Location', preview: `${conferenceConfig.venue.city}, ${conferenceConfig.venue.state}` },
-    { key: '{date}', label: 'Current Date', preview: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) },
-  ]
 
   useEffect(() => {
     loadConfig()
   }, [])
 
-  const loadConfig = async (templateId?: string) => {
+  const loadConfig = async () => {
     try {
       setLoading(true)
-      const tid = templateId || activeTemplateId
-      const response = await fetch(`/api/admin/config/certificate?templateId=${tid}`)
+      const response = await fetch('/api/admin/config/certificate')
       if (response.ok) {
         const result = await response.json()
-        if (result.templateList) setTemplateList(result.templateList)
         if (result.success && result.data) {
           setConfig({
             enabled: result.data.enabled,
@@ -297,7 +260,6 @@ export function CertificateDesigner() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          templateId: activeTemplateId,
           enabled: config.enabled, 
           template: { 
             orientation: config.orientation, 
@@ -347,46 +309,6 @@ export function CertificateDesigner() {
         </div>
       </CardHeader>
       <CardContent>
-        {/* Template Selector */}
-        <div className="mb-4 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border">
-          <div className="flex items-center justify-between mb-2">
-            <Label className="text-sm font-semibold">Certificate Template</Label>
-            <div className="flex gap-1">
-              <Input placeholder="New template ID" value={newTemplateId} onChange={e => setNewTemplateId(e.target.value)} className="h-7 w-36 text-xs" />
-              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => {
-                if (!newTemplateId) return
-                setActiveTemplateId(newTemplateId)
-                setElements([])
-                setConfig(prev => ({ ...prev, backgroundImageUrl: '', title: newTemplateId.toUpperCase().replace(/-/g, ' ') }))
-                setNewTemplateId('')
-                toast({ title: 'New template created', description: `Template "${newTemplateId}" — configure and save it` })
-              }}>
-                <Plus className="h-3 w-3 mr-1" /> New
-              </Button>
-            </div>
-          </div>
-          <div className="flex gap-1.5 flex-wrap">
-            {TEMPLATE_PRESETS.map(t => (
-              <Button key={t.id} size="sm" variant={activeTemplateId === t.id ? 'default' : 'outline'}
-                className={`h-7 text-xs ${activeTemplateId === t.id ? 'bg-amber-600' : ''}`}
-                onClick={() => { setActiveTemplateId(t.id); loadConfig(t.id) }}
-              >
-                {t.label}
-                {templateList.some(tl => tl.id === t.id) && <span className="ml-1 text-[10px]">✓</span>}
-              </Button>
-            ))}
-            {templateList.filter(t => !TEMPLATE_PRESETS.some(p => p.id === t.id)).map(t => (
-              <Button key={t.id} size="sm" variant={activeTemplateId === t.id ? 'default' : 'outline'}
-                className={`h-7 text-xs ${activeTemplateId === t.id ? 'bg-amber-600' : ''}`}
-                onClick={() => { setActiveTemplateId(t.id); loadConfig(t.id) }}
-              >
-                {t.title || t.id}
-              </Button>
-            ))}
-          </div>
-          <p className="text-[10px] text-slate-500 mt-1.5">Active: <strong>{activeTemplateId}</strong> — Each category gets its own template with background, elements, and layout</p>
-        </div>
-
         <Tabs defaultValue="design">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="design">Design</TabsTrigger>
@@ -502,21 +424,21 @@ export function CertificateDesigner() {
                         )}
                         {/* Element Content */}
                         <div
-                          className="h-full p-1 pointer-events-none"
+                          className="flex items-center justify-center h-full p-2 pointer-events-none"
                           style={{
                             fontSize: `${(element.fontSize || 16) * displayScale}px`,
                             fontFamily: element.fontFamily,
                             color: element.color,
-                            fontWeight: element.fontWeight || (element.type === 'variable' ? 'bold' : 'normal'),
+                            fontWeight: 'bold',
                             textAlign: element.align,
-                            lineHeight: '1.3',
-                            wordWrap: 'break-word' as any,
-                            overflowWrap: 'break-word' as any,
-                            whiteSpace: 'normal' as any,
-                            textIndent: element.textIndent ? `${element.textIndent * displayScale}px` : undefined,
+                            lineHeight: '1.2'
                           }}
                         >
-                          {ALL_VARIABLES.reduce((text, v) => text.replace(new RegExp(v.key.replace(/[{}]/g, '\\$&'), 'g'), v.preview), element.content || '')}
+                          {element.content?.replace('{name}', 'John Doe')
+                            .replace('{conference}', conferenceConfig.shortName)
+                            .replace('{startDate}', 'Jan 15, 2026')
+                            .replace('{endDate}', 'Jan 18, 2026')
+                            .replace('{location}', 'Sample City')}
                         </div>
                       </div>
                     ))}
@@ -544,7 +466,7 @@ export function CertificateDesigner() {
                         <div>
                           <Label>Content</Label>
                           <Input value={el.content} onChange={(e) => updateElement(el.id, { content: e.target.value })} className="mt-1" placeholder="{name}, {conference}, etc." />
-                          <p className="text-xs text-slate-500 mt-1">Variables: {ALL_VARIABLES.map(v => v.key).join(', ')}</p>
+                          <p className="text-xs text-slate-500 mt-1">Use variables: {'{name}'}, {'{conference}'}</p>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div>
@@ -575,51 +497,12 @@ export function CertificateDesigner() {
                         <div className="grid grid-cols-2 gap-2">
                           <div>
                             <Label>X Position</Label>
-                            <Input type="number" value={Math.round(el.x)} onChange={(e) => updateElement(el.id, { x: parseInt(e.target.value) || 0 })} className="mt-1" />
+                            <Input type="number" value={el.x} onChange={(e) => updateElement(el.id, { x: parseInt(e.target.value) })} className="mt-1" />
                           </div>
                           <div>
                             <Label>Y Position</Label>
-                            <Input type="number" value={Math.round(el.y)} onChange={(e) => updateElement(el.id, { y: parseInt(e.target.value) || 0 })} className="mt-1" />
+                            <Input type="number" value={el.y} onChange={(e) => updateElement(el.id, { y: parseInt(e.target.value) })} className="mt-1" />
                           </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label>Width</Label>
-                            <Input type="number" value={Math.round(el.width)} onChange={(e) => updateElement(el.id, { width: parseInt(e.target.value) || 50 })} className="mt-1" />
-                          </div>
-                          <div>
-                            <Label>Height</Label>
-                            <Input type="number" value={Math.round(el.height)} onChange={(e) => updateElement(el.id, { height: parseInt(e.target.value) || 20 })} className="mt-1" />
-                          </div>
-                        </div>
-                        <div>
-                          <Label>Font Family</Label>
-                          <select value={el.fontFamily || 'Georgia'} onChange={(e) => updateElement(el.id, { fontFamily: e.target.value })} className="w-full mt-1 h-9 border rounded px-2 text-sm">
-                            {['Georgia', 'Arial', 'Times New Roman', 'Helvetica', 'Verdana', 'Courier New', 'Palatino', 'Garamond'].map(f => (
-                              <option key={f} value={f}>{f}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label>Font Weight</Label>
-                            <select value={el.fontWeight || 'normal'} onChange={(e) => updateElement(el.id, { fontWeight: e.target.value as 'normal' | 'bold' })} className="w-full mt-1 h-9 border rounded px-2 text-sm">
-                              <option value="normal">Normal</option>
-                              <option value="bold">Bold</option>
-                            </select>
-                          </div>
-                          <div>
-                            <Label>1st Line Indent (px)</Label>
-                            <Input type="number" value={el.textIndent || 0} onChange={(e) => updateElement(el.id, { textIndent: parseInt(e.target.value) || 0 })} className="mt-1" />
-                            <p className="text-[10px] text-slate-400 mt-0.5">Pushes first line right so wrapped lines start at box edge</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-700 rounded">
-                          <div>
-                            <Label className="text-xs">Auto-fit text</Label>
-                            <p className="text-[10px] text-slate-400">Shrink font to fit within box</p>
-                          </div>
-                          <Switch checked={el.autoFit || false} onCheckedChange={(checked) => updateElement(el.id, { autoFit: checked })} />
                         </div>
                         <Button variant="destructive" size="sm" onClick={() => deleteElement(el.id)} className="w-full">
                           <Trash2 className="h-4 w-4 mr-2" />Delete Element
@@ -679,10 +562,8 @@ export function CertificateDesigner() {
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <p className="text-sm font-semibold mb-2">Available Variables:</p>
               <div className="flex flex-wrap gap-2 text-xs">
-                {ALL_VARIABLES.map(v => (
-                  <code key={v.key} className="px-2 py-1 bg-white dark:bg-slate-800 rounded cursor-pointer hover:bg-blue-100" title={v.label}>
-                    {v.key}
-                  </code>
+                {['{name}', '{conference}', '{startDate}', '{endDate}', '{location}', '{registrationId}', '{institution}'].map(v => (
+                  <code key={v} className="px-2 py-1 bg-white dark:bg-slate-800 rounded">{v}</code>
                 ))}
               </div>
             </div>

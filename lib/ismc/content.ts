@@ -106,6 +106,7 @@ export const ismc = {
     { label: 'Abstracts', href: '/abstracts' },
     { label: 'Fees', href: '/pricing' },
     { label: 'Venue', href: '/venue' },
+    { label: 'Certificates', href: '/certificates' },
     { label: 'Contact', href: '/contact' },
   ],
 

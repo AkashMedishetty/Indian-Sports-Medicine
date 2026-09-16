@@ -15,6 +15,7 @@ import { ProgramManager } from './ProgramManager'
 import { ContactMessagesManager } from './ContactMessagesManager'
 import { BadgeDesigner } from './BadgeDesigner'
 import { CertificateDesigner } from './CertificateDesigner'
+import { SpotCertificates } from './spot-certificates/SpotCertificates'
 import { BulkCertificateEmailer } from './BulkCertificateEmailer'
 import { AdvancedBulkEmailSystem } from './AdvancedBulkEmailSystem'
 import { StunningAnalyticsDashboard } from './StunningAnalyticsDashboard'
@@ -234,7 +235,7 @@ export function CompleteAdminPanel() {
       case 'certificates':
         return (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <CertificateDesigner />
+            <SpotCertificates />
           </motion.div>
         )
 

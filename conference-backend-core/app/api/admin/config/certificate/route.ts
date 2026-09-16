@@ -13,36 +13,10 @@ export async function GET(request: NextRequest) {
 
     await connectDB()
 
-    const { searchParams } = new URL(request.url)
-    const templateId = searchParams.get('templateId') || 'default'
-
     const config = await Configuration.findOne({ 
       type: 'certificate', 
-      key: `certificate_config_${templateId}` 
+      key: 'certificate_config' 
     })
-
-    // Also try legacy key for backward compatibility
-    if (!config && templateId === 'default') {
-      const legacyConfig = await Configuration.findOne({ 
-        type: 'certificate', 
-        key: 'certificate_config' 
-      })
-      if (legacyConfig) {
-        return NextResponse.json({ success: true, data: legacyConfig.value })
-      }
-    }
-
-    // Load all saved template IDs
-    const allTemplates = await Configuration.find({ 
-      type: 'certificate',
-      key: { $regex: /^certificate_config_/ }
-    }).select('key value.template.orientation value.content.title').lean()
-
-    const templateList = allTemplates.map((t: any) => ({
-      id: t.key.replace('certificate_config_', ''),
-      title: t.value?.content?.title || t.key.replace('certificate_config_', ''),
-      orientation: t.value?.template?.orientation || 'landscape'
-    }))
 
     // Default certificate configuration
     const defaultConfig = {
@@ -79,8 +53,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: config?.value || defaultConfig,
-      templateList
+      data: config?.value || defaultConfig
     })
   } catch (error) {
     console.error('Get certificate config error:', error)
@@ -99,15 +72,14 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { templateId = 'default', ...configData } = body
     await connectDB()
 
     const config = await Configuration.findOneAndUpdate(
-      { type: 'certificate', key: `certificate_config_${templateId}` },
+      { type: 'certificate', key: 'certificate_config' },
       {
         type: 'certificate',
-        key: `certificate_config_${templateId}`,
-        value: configData,
+        key: 'certificate_config',
+        value: body,
         isActive: true
       },
       { upsert: true, new: true }

@@ -39,6 +39,7 @@ export function Navigation() {
     { href: '/abstracts', label: 'Abstracts' },
     { href: '/pricing', label: 'Fees' },
     { href: '/venue', label: 'Venue' },
+    { href: '/certificates', label: 'Certificates' },
     { href: '/contact', label: 'Contact' }
   ]
 

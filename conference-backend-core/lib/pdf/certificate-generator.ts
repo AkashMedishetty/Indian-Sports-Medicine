@@ -56,10 +56,12 @@ export class CertificateGenerator {
     
     if (isVercel) {
       const chromium = require('@sparticuz/chromium')
+      
+      // Disable WebGL for better performance in serverless
       chromium.setGraphicsMode = false
       
       return await puppeteer.launch({
-        args: [...chromium.args, '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--disable-setuid-sandbox'],
+        args: chromium.args,
         defaultViewport: viewport,
         executablePath: await chromium.executablePath(),
         headless: true,
@@ -174,9 +176,9 @@ export class CertificateGenerator {
       console.log('🖼️ Background image loaded:', bgImageLoaded)
       
       // Small delay to ensure rendering is complete
-      await new Promise(r => setTimeout(r, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      // Generate PDF
+      // Generate PDF (Buffer.from: newer puppeteer returns Uint8Array)
       const pdfBuffer = Buffer.from(await page.pdf({
         width: `${actualWidth}px`,
         height: `${actualHeight}px`,
@@ -236,68 +238,16 @@ export class CertificateGenerator {
     const elementsHTML = (certificateConfig.value.elements || []).map((el: any) => {
       let content = el.content || ''
       
-      const fullTitle = user.title || user.abstractTitle || ''
-      
-      // Find each title line element to get its specific width and font size
-      const allElements = certificateConfig.value.elements || []
-      const findEl = (key: string) => allElements.find((e: any) => e.content === key)
-      const titleEl1 = findEl('{title_line1}')
-      const titleEl2 = findEl('{title_line2}')
-      const titleEl3 = findEl('{title_line3}')
-      
-      // Split title respecting each element's own width
-      const splitForEl = (text: string, el: any) => {
-        if (!el || !text) return ''
-        // Georgia font: 0.45 multiplier fills boxes well with ~5% safety margin
-        const avgCharWidth = (el.fontSize || 16) * 0.45
-        const charsPerLine = Math.max(10, Math.floor((el.width || 600) / avgCharWidth))
-        const words = text.split(' ')
-        let line = ''
-        for (const word of words) {
-          if (line.length + word.length + 1 > charsPerLine && line.length > 0) break
-          line += (line ? ' ' : '') + word
-        }
-        return line.trim()
-      }
-      
-      const getRemainder = (text: string, used: string) => {
-        if (!used) return text
-        return text.slice(used.length).trim()
-      }
-      
-      const line1Text = splitForEl(fullTitle, titleEl1 || { width: 600, fontSize: 16 })
-      const remainder1 = getRemainder(fullTitle, line1Text)
-      const line2Text = splitForEl(remainder1, titleEl2 || titleEl1 || { width: 600, fontSize: 16 })
-      const line3Text = getRemainder(remainder1, line2Text)
-      
-      const titleLines = [line1Text, line2Text, line3Text]
-      const fullAuthors = user.authors || ''
-      const authorEl1 = findEl('{authors_line1}')
-      const authorEl2 = findEl('{authors_line2}')
-      const authLine1 = splitForEl(fullAuthors, authorEl1 || { width: 600, fontSize: 16 })
-      const authLine2 = getRemainder(fullAuthors, authLine1)
-      const authorLines = [authLine1, authLine2]
-
       // Replace placeholders
       content = content
-        .replace(/{name}/g, `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim().replace(/^(Dr\.?\s*|Prof\.?\s*|Mr\.?\s*|Mrs\.?\s*|Ms\.?\s*)/i, '').trim())
+        .replace(/{name}/g, `${user.profile?.title || ''} ${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim())
         .replace(/{registrationId}/g, user.registration?.registrationId || '')
         .replace(/{institution}/g, user.profile?.institution || '')
         .replace(/{designation}/g, user.profile?.designation || '')
         .replace(/{conference}/g, conferenceConfig.name)
-        .replace(/{shortName}/g, conferenceConfig.shortName)
-        .replace(/{startDate}/g, 'April 25, 2026')
-        .replace(/{endDate}/g, 'April 26, 2026')
+        .replace(/{startDate}/g, conferenceConfig.eventDate.start)
+        .replace(/{endDate}/g, conferenceConfig.eventDate.end)
         .replace(/{location}/g, `${conferenceConfig.venue.city}, ${conferenceConfig.venue.state}`)
-        .replace(/{title_line1}/g, titleLines[0])
-        .replace(/{title_line2}/g, titleLines[1])
-        .replace(/{title_line3}/g, titleLines[2])
-        .replace(/{title}/g, fullTitle)
-        .replace(/{abstractId}/g, user.abstractId || '')
-        .replace(/{authors_line1}/g, authorLines[0])
-        .replace(/{authors_line2}/g, authorLines[1])
-        .replace(/{authors}/g, fullAuthors)
-        .replace(/{date}/g, new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }))
       
       // Check if it's an image
       if (el.type === 'image' || content.startsWith('http') || content.startsWith('data:')) {
@@ -308,6 +258,7 @@ export class CertificateGenerator {
             width: ${el.width}px;
             height: ${el.height}px;
             text-align: ${el.align || 'center'};
+            justify-content: ${el.align === 'center' ? 'center' : el.align === 'right' ? 'flex-end' : 'flex-start'};
           ">
             <img src="${content}" style="max-width: 100%; max-height: 100%; object-fit: contain;" crossorigin="anonymous" />
           </div>
@@ -315,44 +266,17 @@ export class CertificateGenerator {
       }
       
       // Regular text element
-      // Auto-fit: calculate font size to fit text within bounding box
-      let fontSize = el.fontSize || 16
-      if (el.autoFit && content && el.width && el.height) {
-        // Estimate chars per line based on font size and width
-        // Average char width is roughly 0.6 * fontSize
-        const maxAttempts = 10
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-          const avgCharWidth = fontSize * 0.55
-          const charsPerLine = Math.floor(el.width / avgCharWidth)
-          const lineHeight = fontSize * 1.3
-          const lines = Math.ceil(content.length / Math.max(charsPerLine, 1))
-          const totalHeight = lines * lineHeight
-          if (totalHeight <= el.height || fontSize <= 8) break
-          fontSize = Math.max(8, fontSize - 1)
-        }
-      }
-
-      // Determine if this element should wrap text
-      // Line-specific variables ({title_line1}, {title_line2}, etc.) should NOT wrap
-      // Full variables ({title}, {authors}) SHOULD wrap within their box
-      const isLineVar = el.content && /\{(title_line|authors_line)\d\}/.test(el.content)
-      const shouldWrap = !isLineVar && (el.autoFit || el.content === '{title}' || el.content === '{authors}')
-
       return `
         <div class="certificate-element" style="
           left: ${el.x}px;
           top: ${el.y}px;
           width: ${el.width}px;
-          ${shouldWrap ? `min-height: ${el.height}px;` : `height: ${el.height}px;`}
-          font-size: ${fontSize}px;
+          height: ${el.height}px;
+          font-size: ${el.fontSize || 16}px;
           font-family: ${el.fontFamily || 'Georgia'};
-          font-weight: ${el.fontWeight || 'normal'};
           color: ${el.color || '#000'};
           text-align: ${el.align || 'center'};
-          text-indent: ${el.textIndent || 0}px;
-          white-space: ${shouldWrap ? 'normal' : 'nowrap'};
-          overflow: visible;
-          ${shouldWrap ? 'word-wrap: break-word; overflow-wrap: break-word;' : ''}
+          justify-content: ${el.align === 'center' ? 'center' : el.align === 'right' ? 'flex-end' : 'flex-start'};
         ">${content}</div>
       `
     }).join('')
@@ -369,6 +293,7 @@ export class CertificateGenerator {
             width: ${actualWidth}px;
             height: ${actualHeight}px;
             position: relative;
+            overflow: hidden;
           }
           .background-image {
             position: absolute;
@@ -381,11 +306,10 @@ export class CertificateGenerator {
           }
           .certificate-element {
             position: absolute;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
             z-index: 1;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
-            line-height: 1.3;
           }
           img {
             display: block;
