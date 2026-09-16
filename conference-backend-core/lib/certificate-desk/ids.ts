@@ -18,8 +18,8 @@
  * which is index-backed and exact.
  */
 
-/** Canonical stored form. */
-export const ID_PREFIX = 'TGASI'
+/** Canonical stored form. IASMCON registration IDs look like IASMCON2026-218. */
+export const ID_PREFIX = 'IASMCON2026'
 
 /** <prefix><sep><digits>, tolerating any separator a mangled scan may produce. */
 const ID_ANYWHERE = new RegExp(`${ID_PREFIX}[^A-Za-z0-9]?0*(\\d{1,6})`, 'i')

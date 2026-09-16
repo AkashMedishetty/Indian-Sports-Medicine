@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { AlertTriangle, Award, Camera, Download, ExternalLink, Eye, FileText, Loader2, Presentation, Search } from "lucide-react"
 import { Navigation } from "../../components/Navigation"
 import { conferenceConfig } from "../../config/conference.config"
-import { EVENT_PHOTOS_URL, ORGANISER_NAME, ORGANISER_URL, PHOTO_STEPS } from "../../lib/certificates/post-event"
+import { EVENT_PHOTOS_URL, PHOTO_STEPS } from "../../lib/certificates/post-event"
 
 type Kind = "participation" | "poster" | "paper"
 
@@ -118,7 +118,7 @@ export default function CertificatesPage() {
               id="certificate-query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="TGASI-123 or you@example.com"
+              placeholder="IASMCON2026-123 or you@example.com"
               autoComplete="email"
               autoCapitalize="none"
               spellCheck={false}
@@ -230,22 +230,6 @@ export default function CertificatesPage() {
           </a>
         </section>
 
-        <section className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-6 dark:border-amber-900 dark:bg-amber-950/30">
-          <h2 className="font-semibold text-amber-900 dark:text-amber-200">About TSMC credit points</h2>
-          <p className="mt-2 text-sm leading-relaxed text-amber-900/90 dark:text-amber-100/90">
-            The certificates on this page are issued by the conference.{" "}
-            <strong>Credit points certificates are issued by the Telangana State Medical Council (TSMC) itself.</strong>{" "}
-            Neither the event management company nor the Organising Committee has any role in issuing them. If you marked
-            your attendance at the registration desk, you will receive your credit points certificate from TSMC.
-          </p>
-        </section>
-
-        <p className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
-          Event organiser:{" "}
-          <a href={ORGANISER_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">
-            {ORGANISER_NAME}
-          </a>
-        </p>
       </main>
     </div>
   )

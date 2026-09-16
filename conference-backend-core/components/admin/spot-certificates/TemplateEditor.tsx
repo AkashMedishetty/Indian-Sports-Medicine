@@ -25,7 +25,7 @@ import { PreviewDialog, type PreviewState } from './PreviewDialog'
 const SAMPLE_VALUES: SpotValues = {
   name: 'Dr. Ramesh Kumar',
   title: 'Laparoscopic Management of Complicated Acute Appendicitis: A Prospective Study',
-  abstractId: 'TGASI-123-ABS-45',
+  abstractId: 'IASMCON2026-123-ABS-45',
   role: 'Poster Presenter',
 }
 const PLACEHOLDERS = ['{name}', '{title}', '{abstractId}', '{role}', '{conference}']

@@ -3,7 +3,7 @@
  * thank-you email. Kept dependency-free so the client page can import it.
  */
 
-export const EVENT_PHOTOS_URL = 'https://evca.ctx.works/event/tgasicon-2026-3a37f656'
+export const EVENT_PHOTOS_URL = 'https://evca.ctx.works/event/iasmcon-2026-9078e0c8'
 
 export const PHOTO_STEPS = [
   'Open the link. All the event photos will load.',

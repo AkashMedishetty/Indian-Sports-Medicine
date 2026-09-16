@@ -54,7 +54,7 @@ export async function buildCertificateWorkbook(): Promise<ExcelJS.Buffer> {
 
   const active = records.filter((r) => r.active !== false)
   const wb = new ExcelJS.Workbook()
-  wb.creator = 'TGASICON 2026'
+  wb.creator = 'IASMCON 2026'
   wb.created = new Date()
 
   /* ------------------------------------------------------------ Summary */

@@ -118,11 +118,23 @@ export type LookupResult =
   | { ok: true; name: string; registrationId: string; certificates: PublicCertificate[] }
   | { ok: false; status: number; message: string }
 
+// IASMCON abstract tracks are "Free Paper" / "E-Poster"; map to certificate kinds.
+const abstractKind = (track: unknown): CertificateKind | null => {
+  const t = String(track ?? '').toLowerCase()
+  if (t.includes('poster')) return 'poster'
+  if (t.includes('paper')) return 'paper'
+  return null
+}
+
 async function eligibleAbstracts(userId: unknown, kinds: CertificateKind[]) {
-  return (await Abstract.find({ userId, track: { $in: kinds }, status: { $in: ELIGIBLE_ABSTRACT_STATUSES } })
+  const all = (await Abstract.find({ userId, status: { $in: ELIGIBLE_ABSTRACT_STATUSES } })
     .select('abstractId title track')
     .sort({ abstractId: 1 })
     .lean()) as any[]
+  return all.filter((a) => {
+    const k = abstractKind(a.track)
+    return k !== null && kinds.includes(k)
+  })
 }
 
 const abstractKey = (a: any) => String(a.abstractId || a._id)
@@ -130,7 +142,7 @@ const abstractKey = (a: any) => String(a.abstractId || a._id)
 export async function lookupCertificates(query: string): Promise<LookupResult> {
   const parsed = parseScan(String(query ?? '').slice(0, 300))
   if (parsed.kind === 'invalid') {
-    return { ok: false, status: 400, message: 'Enter your registration ID (for example TGASI-123) or the email address you registered with.' }
+    return { ok: false, status: 400, message: 'Enter your registration ID (for example IASMCON2026-123) or the email address you registered with.' }
   }
 
   await connectDB()
@@ -157,7 +169,7 @@ export async function lookupCertificates(query: string): Promise<LookupResult> {
     const template = templates[i]
     if (!template) return
     if (kind === 'participation') return void certificates.push(item(kind))
-    const mine = abstracts.filter((a) => a.track === kind)
+    const mine = abstracts.filter((a) => abstractKind(a.track) === kind)
     if (!mine.length) return
     if (printsAbstract(template)) mine.forEach((a) => certificates.push(item(kind, a)))
     else certificates.push(item(kind))

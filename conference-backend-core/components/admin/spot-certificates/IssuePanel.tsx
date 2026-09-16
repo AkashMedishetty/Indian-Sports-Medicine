@@ -321,7 +321,7 @@ function CsvTab({ template, onPreview, previewBusy, onSent }: { template: SpotTe
             disabled={sending}
             className="font-mono text-xs"
             onChange={(e) => setText(e.target.value)}
-            placeholder={'name,email,title,abstract id,role\nDr. Ramesh Kumar,ramesh@example.com,"Appendicitis, a prospective study",TGASI-123-ABS-45,Poster Presenter'}
+            placeholder={'name,email,title,abstract id,role\nDr. Ramesh Kumar,ramesh@example.com,"Appendicitis, a prospective study",IASMCON2026-123-ABS-45,Poster Presenter'}
           />
           <p className="mt-1 text-xs text-gray-500">
             Paste from Excel / Google Sheets, or CSV. Without a header row the columns are: name, email, title, abstract ID, role.
