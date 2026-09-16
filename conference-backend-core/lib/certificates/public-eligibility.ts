@@ -4,19 +4,21 @@
  * API routes apply exactly the same rules.
  */
 
-export const CERTIFICATE_KINDS = ['poster', 'paper'] as const
+export const CERTIFICATE_KINDS = ['participation', 'poster', 'paper'] as const
 export type CertificateKind = (typeof CERTIFICATE_KINDS)[number]
 
 export const isCertificateKind = (value: unknown): value is CertificateKind =>
   typeof value === 'string' && (CERTIFICATE_KINDS as readonly string[]).includes(value)
 
 export const CERTIFICATE_LABELS: Record<CertificateKind, string> = {
+  participation: 'Participation Certificate',
   poster: 'Poster Presentation Certificate',
   paper: 'Paper Presentation Certificate',
 }
 
 /** Spot Certificates template (matched by name, case-insensitive) used for each kind. */
 export const TEMPLATE_NAME_BY_KIND: Record<CertificateKind, string> = {
+  participation: 'Participation',
   poster: 'Poster',
   paper: 'Paper',
 }
@@ -63,5 +65,5 @@ export function kindsFor(abstracts: Array<{ track?: string }>): CertificateKind[
     if (t.includes('poster')) kinds.add('poster')
     else if (t.includes('paper')) kinds.add('paper')
   }
-  return CERTIFICATE_KINDS.filter((kind) => kinds.has(kind))
+  return CERTIFICATE_KINDS.filter((kind) => kind === 'participation' || kinds.has(kind))
 }

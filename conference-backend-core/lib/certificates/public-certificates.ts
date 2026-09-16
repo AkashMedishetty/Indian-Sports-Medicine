@@ -168,6 +168,7 @@ export async function lookupCertificates(query: string): Promise<LookupResult> {
   CERTIFICATE_KINDS.forEach((kind, i) => {
     const template = templates[i]
     if (!template) return
+    if (kind === 'participation') return void certificates.push(item(kind))
     const mine = abstracts.filter((a) => abstractKind(a.track) === kind)
     if (!mine.length) return
     if (printsAbstract(template)) mine.forEach((a) => certificates.push(item(kind, a)))
@@ -204,9 +205,12 @@ export async function renderDownload(token: string): Promise<DownloadResult> {
   if (!template) return { ok: false, reason: 'unavailable' }
 
   const name = certificateName(user.profile, user.email)
-  const mine = await eligibleAbstracts(user._id, [kind])
-  const abstract = a ? mine.find((x) => abstractKey(x) === a) : mine[0]
-  if (!abstract) return { ok: false, reason: 'unavailable' }
+  let abstract: any = null
+  if (kind !== 'participation') {
+    const mine = await eligibleAbstracts(user._id, [kind])
+    abstract = a ? mine.find((x) => abstractKey(x) === a) : mine[0]
+    if (!abstract) return { ok: false, reason: 'unavailable' }
+  }
 
   const pdf = await templatePdf(template)
   if (!pdf) return { ok: false, reason: 'unavailable' }
