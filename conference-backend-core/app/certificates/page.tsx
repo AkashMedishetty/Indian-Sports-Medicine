@@ -6,7 +6,7 @@ import { Navigation } from "../../components/Navigation"
 import { conferenceConfig } from "../../config/conference.config"
 import { EVENT_PHOTOS_URL, PHOTO_STEPS } from "../../lib/certificates/post-event"
 
-type Kind = "participation" | "poster" | "paper"
+type Kind = "poster" | "paper"
 
 interface Certificate {
   kind: Kind
@@ -22,7 +22,7 @@ interface Found {
   certificates: Certificate[]
 }
 
-const KIND_ICON = { participation: Award, poster: Presentation, paper: FileText } as const
+const KIND_ICON = { poster: Presentation, paper: FileText } as const
 
 const NOTICES: Record<string, string> = {
   expired: "That download link has expired. Search again to get a fresh one.",
@@ -135,8 +135,7 @@ export default function CertificatesPage() {
             </button>
           </div>
           <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-            Every delegate can download a participation certificate. Poster and paper presenters can also download a
-            certificate for their presentation.
+            Accepted paper and poster presenters can download their presentation certificate here.
           </p>
         </form>
 
@@ -156,7 +155,8 @@ export default function CertificatesPage() {
 
               {found.certificates.length === 0 ? (
                 <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-                  No certificates are available yet. Please write to{" "}
+                  No presentation certificate is linked to this registration. Certificates are issued only for accepted
+                  paper and poster presentations. If you believe this is an error, write to{" "}
                   <a className="text-primary underline" href={`mailto:${contact.email}`}>{contact.email}</a>.
                 </p>
               ) : (
