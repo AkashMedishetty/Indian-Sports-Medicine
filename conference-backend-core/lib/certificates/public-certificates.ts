@@ -5,7 +5,7 @@ import User from '@/lib/models/User'
 import Abstract from '@/lib/models/Abstract'
 import CertificateTemplate from '../models/CertificateTemplate'
 import { conferenceConfig } from '../../config/conference.config'
-import { parseScan } from '../certificate-desk/ids'
+import { parseScan, phoneMatchRegex } from '../certificate-desk/ids'
 import { renderSpotCertificate, toBytes } from './spot-render'
 import { toTemplateDTO, type TemplateDTO } from './templates'
 import {
@@ -21,7 +21,7 @@ import {
 
 const USER_FIELDS = 'email role profile.title profile.firstName profile.lastName registration.registrationId registration.status'
 
-const NOT_FOUND_MESSAGE = `We couldn't find certificates for that registration ID or email. Check that it matches your registration, or write to ${conferenceConfig.contact.email}.`
+const NOT_FOUND_MESSAGE = `We couldn't find certificates for that registration ID, email or mobile number. Check that it matches the details you registered with, or write to ${conferenceConfig.contact.email}.`
 
 /* -------------------------------------------------------------- templates */
 
@@ -142,11 +142,16 @@ const abstractKey = (a: any) => String(a.abstractId || a._id)
 export async function lookupCertificates(query: string): Promise<LookupResult> {
   const parsed = parseScan(String(query ?? '').slice(0, 300))
   if (parsed.kind === 'invalid') {
-    return { ok: false, status: 400, message: 'Enter your registration ID (for example IASMCON2026-123) or the email address you registered with.' }
+    return { ok: false, status: 400, message: 'Enter the email ID or mobile number you used to register, or your registration ID (for example IASMCON2026-123).' }
   }
 
   await connectDB()
-  const filter = parsed.kind === 'id' ? { 'registration.registrationId': { $in: parsed.variants } } : { email: parsed.email }
+  const filter =
+    parsed.kind === 'id'
+      ? { 'registration.registrationId': { $in: parsed.variants } }
+      : parsed.kind === 'phone'
+        ? { 'profile.phone': { $regex: phoneMatchRegex(parsed.phone) } }
+        : { email: parsed.email }
   const user = (await User.findOne(filter).select(USER_FIELDS).lean()) as any
   if (!user || !isEligibleRegistrant(user)) return { ok: false, status: 404, message: NOT_FOUND_MESSAGE }
 

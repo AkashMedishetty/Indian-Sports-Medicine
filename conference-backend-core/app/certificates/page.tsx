@@ -42,7 +42,7 @@ export default function CertificatesPage() {
   const search = useCallback(async (raw: string) => {
     const q = raw.trim()
     if (!q) {
-      setError("Enter your registration ID or email address.")
+      setError("Enter your registration ID, email or mobile number.")
       return
     }
     inFlight.current?.abort()
@@ -105,24 +105,28 @@ export default function CertificatesPage() {
           </span>
           <h1 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">Download your certificates</h1>
           <p className="mx-auto mt-3 max-w-xl text-gray-600 dark:text-gray-300">
-            Enter your registration ID or the email address you registered with. No password is needed.
+            Enter the{" "}
+            <strong className="font-semibold text-gray-900 dark:text-white">
+              email ID or mobile number you used to register for the conference
+            </strong>{" "}
+            (or your registration ID). No password is needed.
           </p>
         </div>
 
         <form onSubmit={onSubmit} className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 dark:border-gray-700 dark:bg-gray-900">
           <label htmlFor="certificate-query" className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Registration ID or email
+            Registration ID, email or mobile number
           </label>
           <div className="mt-2 flex flex-col gap-3 sm:flex-row">
             <input
               id="certificate-query"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="IASMCON2026-123 or you@example.com"
-              autoComplete="email"
+              placeholder="you@example.com, 9876543210 or IASMCON2026-123"
+              autoComplete="off"
               autoCapitalize="none"
               spellCheck={false}
-              inputMode="email"
+              inputMode="text"
               className="h-12 w-full min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-4 text-base text-gray-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
             />
             <button

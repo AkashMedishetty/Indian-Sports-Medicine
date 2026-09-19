@@ -29,7 +29,18 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export type ParsedScan =
   | { kind: 'id'; canonical: string; number: number; variants: string[] }
   | { kind: 'email'; email: string }
+  | { kind: 'phone'; phone: string; label: string } // phone = 10-digit core; label = as typed, for messages
   | { kind: 'invalid'; reason: string }
+
+/**
+ * Match a phone stored in any free-form spelling whose trailing 10 significant
+ * digits equal `core`. Tolerates separators (spaces, dashes, brackets, +) and an
+ * optional country/trunk prefix (+91, 0). `core` is exactly 10 digits from
+ * parseScan, so it is safe to embed in the pattern.
+ */
+export function phoneMatchRegex(core: string): RegExp {
+  return new RegExp(core.split('').join('\\D*') + '\\D*$')
+}
 
 /**
  * Every spelling of this registration number that could be stored, so an $in
@@ -109,8 +120,16 @@ export function parseScan(raw: string | null | undefined): ParsedScan {
 
   if (EMAIL.test(s)) return { kind: 'email', email: s.toLowerCase() }
 
+  // A registered mobile number. Registration ids are only a few digits, so a run
+  // of 10+ digits (with any separators, and an optional +91 / 0 prefix) is a
+  // phone; use its last 10 digits as the lookup key.
+  const digits = s.replace(/\D/g, '')
+  if (digits.length >= 10 && digits.length <= 15) {
+    return { kind: 'phone', phone: digits.slice(-10), label: s.slice(0, 40) }
+  }
+
   return {
     kind: 'invalid',
-    reason: `Could not read "${s.slice(0, 40)}" as a registration ID — scan the badge, or type an ID or email`,
+    reason: `Could not read "${s.slice(0, 40)}" as a registration ID — scan the badge, or type an ID, email or mobile number`,
   }
 }

@@ -3,7 +3,7 @@ import connectDB from '@/lib/mongodb'
 import User from '@/conference-backend-core/lib/models/User'
 import Abstract from '@/conference-backend-core/lib/models/Abstract'
 import CertificateCollection from '@/conference-backend-core/lib/models/CertificateCollection'
-import { parseScan } from './ids'
+import { parseScan, phoneMatchRegex } from './ids'
 import {
   CERT_TYPES,
   TRACK_FOR_TYPE,
@@ -128,10 +128,12 @@ async function findRegistrant(input: ScanInput): Promise<{ user: any } | { resul
   const filter =
     parsed.kind === 'id'
       ? { 'registration.registrationId': { $in: parsed.variants } }
-      : { email: parsed.email }
+      : parsed.kind === 'phone'
+        ? { 'profile.phone': { $regex: phoneMatchRegex(parsed.phone) } }
+        : { email: parsed.email }
   const user = await User.findOne(filter).select(USER_FIELDS).lean()
   if (!user) {
-    const what = parsed.kind === 'id' ? parsed.canonical : parsed.email
+    const what = parsed.kind === 'id' ? parsed.canonical : parsed.kind === 'phone' ? parsed.label : parsed.email
     return { result: { outcome: 'not-found', message: `No registration found for ${what}` } }
   }
   return { user }
